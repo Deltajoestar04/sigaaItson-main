@@ -1,0 +1,141 @@
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #f5f5f5;
+
+}
+
+.register-container {
+    max-width: 800px;
+    margin: auto;
+    padding: 20px;
+
+}
+
+.register-panel {
+    background-color: #fff;
+    border: 2px solid var(--primary-color);
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    
+}
+
+
+
+.panel-heading {
+    background: linear-gradient(to right, #006db6, #0088e8);
+    color: white;
+    padding: 20px;
+}
+
+.panel-title-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.panel-title {
+    margin: 0;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.row
+{
+    margin-top: 10px;
+
+}
+.panel-body {
+    padding: 30px;
+
+}
+
+.label-blue, .label-blue i {
+    color: #006db6;
+}
+
+
+.form-group {
+    margin-bottom: 25px;
+}
+
+
+.radio-inline{
+margin-bottom: 25px;
+}
+.form-control {
+    width: 100%;
+   
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+}
+
+.form-control:focus {
+    border-color: #006db6;
+    box-shadow: 0 0 0 3px rgba(0, 109, 182, 0.2);
+    outline: none;
+}
+
+.btn-primary {
+    width: 100%;
+    color: #ffffff;
+    border: none;
+    padding: 12px;
+    border-radius: 4px;
+    background: linear-gradient(to right, #006db6, #0088e8);
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 5px;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0, 109, 182, 0.3);
+}
+.btn-danger {
+    width: 100%;
+    color: #ffffff;
+    border: none;
+    padding: 10px;
+    border-radius: 4px;
+    background: linear-gradient(to right, #ff6464, #ff6060);
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-danger:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(141, 0, 0, 0.3);
+}
+
+.panel-description {
+    background-color: #e6f3ff;
+    border-left: 4px solid #0066cc;
+    padding: 15px;
+    margin: 0 0;
+    font-style: italic;
+    color: #444;
+    font-size: 1em;
+    line-height: 1.5;
+    border-radius: 0 4px 4px 0;
+    margin-bottom: 5px;
+}
+
+
+@media (max-width: 768px) {
+    .panel-title-container {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .login-container {
+        padding: 10px;
+    }
+    .panel-body {
+        padding: 20px;
+    }
+}

@@ -1,0 +1,67 @@
+:root {
+    --primary-color: #006db6;
+    --border-color: #c0c0c0;
+    --text-color: #333;
+    --background-color: #ffffff;
+    --shadow-color: rgba(0, 0, 0, 0.1);
+    --shadow-hover-color: rgba(0, 0, 0, 0.15);
+    --hover-color: #f0f0f0; 
+}
+
+
+.menu-container {
+    background-color: var(--background-color);
+    border: 2px solid var(--primary-color);
+    border-radius: 8px;
+    box-shadow: 0 2px 4px var(--shadow-color);
+    margin-bottom: 30px;
+    padding: 20px;
+    margin-top: 20px;
+
+}
+
+
+.menu-heading {
+    background: linear-gradient(to right, var(--primary-color), #0088e8);
+    color: white;
+    padding: 20px;
+    margin-bottom: 10px;
+}
+
+.menu-button {
+    width: 100%;
+    color: #ffffff;
+    border: none;
+    padding: 10px;
+    border-radius: 4px;
+    background: linear-gradient(to right, var(--primary-color), #047bcf);
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: center;
+    text-decoration: none;
+    display: block;
+}
+
+.menu-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0, 109, 182, 0.3);
+}
+
+.heading-title-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.heading-title {
+    margin: 0;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.container-fluid {
+    padding-top: 5px;
+    padding-bottom: 30px;
+}

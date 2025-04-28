@@ -1,0 +1,90 @@
+:root {
+    --primary-color: #006db6;
+    --border-color: #c0c0c0;
+    --text-color: #ffffff;
+    --background-color: #ffffff;
+    --shadow-color: rgba(0, 0, 0, 0.1);
+    --shadow-hover-color: rgba(0, 0, 0, 0.15);
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+}
+
+.main-container {
+    max-width: 1500px;
+    margin: 40px auto;
+    background-color: var(--background-color);
+    border-radius: 8px;
+    box-shadow: 0 0 10px var(--shadow-color);
+    padding: 20px;
+    border: 2px solid var(--primary-color);
+}
+
+.custom-card {
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    box-shadow: 0 2px 4px var(--shadow-color);
+    transition: box-shadow 0.3s ease;
+}
+
+.custom-card:hover {
+    box-shadow: 0 4px 8px var(--shadow-hover-color);
+}
+
+.header-title {
+    margin: 0;
+    font-size: 28px;
+    font-weight: bold;
+  }
+  .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: linear-gradient(to right, var(--primary-color), #0088e8);
+    color: white;
+    padding: 20px;
+  
+  }
+
+.card-body {
+    padding: 1.25rem;
+    color: var(--primary-color);
+}
+
+.btn-primary {
+    background: linear-gradient(to right, var(--primary-color), #047bcf);
+    border: none;
+    color: #ffffff;
+
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border-radius: 10px;
+  }
+
+.card-footer {
+    padding: 0.75rem 1.25rem;
+    border-top: 1px solid var(--border-color);
+    background-color: var(--background-color);
+    display: flex;
+    justify-content: flex-start;
+    align-items: center; 
+    color: var(--primary-color);
+    font-size: 16px;
+    flex-direction: row-reverse;
+}
+.text-container {
+    white-space: nowrap; 
+    overflow: hidden; 
+    text-overflow: ellipsis;
+}
+@media (max-width: 768px) {
+    .col-md-8, .col-md-4 {
+        width: 100%;
+        margin-bottom: 20px;
+        box-sizing: border-box; 
+    }
+}
