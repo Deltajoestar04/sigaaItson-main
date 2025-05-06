@@ -8,9 +8,9 @@ use CodeIgniter\Controller;
 
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);;
+error_reporting(E_ALL);
 
-use CodeIgniter\HTTP\RequestInterface;
+
 
 class Indicador extends Controller
 {
@@ -22,7 +22,7 @@ class Indicador extends Controller
     {
         helper(['form']);
         $this->usuarioModel = new UsuarioModel();
-       // $this->indicadorModel = new IndicadorModel();
+        $this->indicadorModel = new IndicadorModel(); // Instanciamos correctamente el modelo
         $this->request = \Config\Services::request();
     }
 
@@ -51,11 +51,12 @@ class Indicador extends Controller
             return redirect()->to(base_url('/login'))->with('error', 'Usuario no encontrado');
         }
 
-        //$indicadores = $this->indicadorModel->findIndicadoresPorUsuario($id) ?? [];
+        // Obtener indicadores del usuario
+        $indicadores = $this->indicadorModel->findIndicadoresPorUsuario($id) ?? [];
 
         $data = [
             'usuario' => $usuario,
-            //'Indicador' => $indicadores,
+            'Indicador' => $indicadores,
             'id_usuario' => $id_usuario,
             'id_rol' => $id_rol,
             'id' => $id,
@@ -99,9 +100,9 @@ class Indicador extends Controller
         $id_indicador = $this->request->getPost('id_indicador');
 
         if ($id_indicador) {
-            $this->indicadorModel->actualizarIndicador($id_indicador, $data);
+            $this->indicadorModel->update($id_indicador, $data);
         } else {
-            $this->indicadorModel->guardarIndicador($data);
+            $this->indicadorModel->insert($data);
         }
 
         return redirect()->to(base_url('/Indicador'))->with('success', 'Indicador guardado correctamente');
@@ -117,12 +118,9 @@ class Indicador extends Controller
         }
 
         if ($id) {
-            $this->indicadorModel->eliminarIndicador($id);
+            $this->indicadorModel->delete($id);
         }
 
         return redirect()->to(base_url('/Indicador'))->with('success', 'Indicador eliminado correctamente');
     }
-    
 }
-
-

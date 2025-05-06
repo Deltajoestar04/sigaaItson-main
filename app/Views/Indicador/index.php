@@ -1,6 +1,7 @@
 <?php $this->extend("General"); ?> 
 <?php $this->section("contenido"); ?>
 
+
 <link rel="stylesheet" href="<?= base_url('dist/css/custom/Indicador/general.css') ?>">
 
 <div class="section-container">
@@ -71,16 +72,16 @@
       <table class="table table-bordered text-center">
         <tbody>
           <tr>
-            <td class="bg-success text-white font-weight-bold">80% o mayor</td>
+            <td class="bg-success text-white font-weight-bold">≥ 80%</td>
           </tr>
           <tr>
-            <td class="bg-warning text-dark font-weight-bold">Entre 60% y 79%</td>
+            <td class="bg-warning text-dark font-weight-bold">60% ≤ x < 80%</td>
           </tr>
           <tr>
-            <td class="bg-danger text-white font-weight-bold">Menor a 60%</td>
+            <td class="bg-danger text-white font-weight-bold">0% < x < 60%</td>
           </tr>
           <tr>
-            <td class="bg-secondary text-white font-weight-bold">Igual a 0<br>N/A</td>
+            <td class="bg-secondary text-white font-weight-bold">= 0%<br>N/A</td>
           </tr>
         </tbody>
       </table>

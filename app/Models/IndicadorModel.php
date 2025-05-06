@@ -4,14 +4,6 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 
-use CodeIgniter\Database\ConnectionInterface;
-use CodeIgniter\Database\BaseConnection;
-use CodeIgniter\Database\ConnectionInterface as ConnectionInterfaceAlias;       
-use CodeIgniter\Database\BaseConnection as BaseConnectionAlias;
-use CodeIgniter\Database\ResultInterface;
-use CodeIgniter\Database\ResultInterface as ResultInterfaceAlias;
- 
-
 
 class IndicadorModel extends Model
 {
@@ -21,9 +13,10 @@ class IndicadorModel extends Model
     protected $useSoftDeletes = false;
     protected $protectFields = true;
     protected $useTimestamps = false;
-    protected $dateFormat = 'datetime';
     protected $primaryKey = 'id';
     protected $useAutoIncrement = true;
+
+
     protected $allowedFields = [
         'id_usuario',
         'Indicador',
