@@ -4,7 +4,6 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 
-
 class IndicadorModel extends Model
 {
     protected $table = 'Indicador_tb';
@@ -12,35 +11,34 @@ class IndicadorModel extends Model
     protected $returnType = 'array';
     protected $useSoftDeletes = false;
     protected $protectFields = true;
-    protected $useTimestamps = false;
+    protected $useTimestamps = true;
     protected $primaryKey = 'id';
     protected $useAutoIncrement = true;
 
-
     protected $allowedFields = [
         'id_usuario',
-        'Indicador',
-        'Resultado',
-        'Comentarios',
-        'Objetivo',
-        'Descripcion',
-        'Cant_min',
-        'Total',
-        'Meta',
-        'Acciones'
+        'OBJ. PARTICULAR',
+        'DESCRIPCION',
+        'CANT. MINIMA',
+        'TOTAL OBTENIDO',
+        'META',
+        'RESULTADO',
+        'INDICADOR',
+        'COMENTARIOS',
+        'Acciones y/o Estrategias para lograr semáforo verde',
     ];
 
     protected $validationRules = [
         'id_usuario'  => 'required|is_natural_no_zero',
-        'Indicador'   => 'required|min_length[3]',
-        'Resultado'   => 'permit_empty|max_length[100]',
-        'Comentarios' => 'permit_empty',
-        'Objetivo'    => 'permit_empty',
-        'Descripcion' => 'permit_empty',
-        'Cant_min'    => 'permit_empty|integer',
-        'Total'       => 'permit_empty|integer',
-        'Meta'        => 'permit_empty|max_length[100]',
-        'Acciones'    => 'permit_empty'
+        'OBJ. PARTICULAR' => 'permit_empty',
+        'DESCRIPCION'     => 'permit_empty',
+        'CANT. MINIMA'    => 'permit_empty|integer',
+        'TOTAL OBTENIDO'  => 'permit_empty|integer',
+        'META'            => 'permit_empty|max_length[100]',
+        'RESULTADO'       => 'permit_empty|max_length[100]',
+        'INDICADOR'       => 'required|min_length[3]',
+        'COMENTARIOS'     => 'permit_empty',
+        'Acciones y/o Estrategias para lograr semáforo verde' => 'permit_empty',
     ];
 
     public function findIndicadoresPorUsuario($id_usuario)

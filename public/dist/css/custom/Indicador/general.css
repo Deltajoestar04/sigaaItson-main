@@ -261,7 +261,7 @@
 }
 
 .tabla-contenedor table {
-    width: 350px;
+    width: 1000px;
     background-color: var(--background-color);
     border: 2px solid var(--primary-color);
     border-radius: 8px;

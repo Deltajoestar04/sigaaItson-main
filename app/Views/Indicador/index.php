@@ -20,31 +20,33 @@
         <table id="table_indicadores" class="table table-striped table-bordered">
           <thead>
             <tr>
-              <th><i class="fas fa-tag"></i> Indicador</th>
-              <th><i class="fas fa-chart-line"></i> Valor</th>
-              <th><i class="fas fa-comment"></i> Comentarios</th>
-              <th><i class="fas fa-bullseye"></i> Objetivo</th>
-              <th><i class="fas fa-align-left"></i> Descripción</th>
-              <th><i class="fas fa-sort-numeric-down"></i> Cant. Mínima</th>
-              <th><i class="fas fa-sigma"></i> Total</th>
-              <th><i class="fas fa-flag-checkered"></i> Meta</th>
-              <th><i class="fas fa-tools"></i> Acciones</th>
-              <th><i class="fas fa-cogs"></i> Opciones</th>
+            <th><i class="fas fa-user"></i> Obj. Particular</th>
+            <th><i class="fas fa-align-left"></i> Descripción</th>
+            <th><i class="fas fa-sort-numeric-down"></i> Cant. Mínima</th>
+            <th><i class="fas fa-sigma"></i> Total Obtenido</th>
+            <th><i class="fas fa-flag-checkered"></i> Meta</th>
+            <th><i class="fas fa-chart-line"></i> Resultado</th>
+            <th><i class="fas fa-tag"></i> Indicador</th>
+            <th><i class="fas fa-comment"></i> Comentarios</th>
+            <th><i class="fas fa-tools"></i> Acciones y/o Estrategias</th>
+             <!-- <th><i class="fas fa-cogs"></i> Opciones</th>-->
             </tr>
           </thead>
           <tbody>
             <?php if (!empty($indicadores)): ?>
               <?php foreach ($indicadores as $item): ?>
                 <tr>
-                  <td><?= esc($item['Indicador']) ?></td>
-                  <td><?= esc($item['Resultado']) ?></td>
-                  <td><?= esc($item['Comentarios']) ?></td>
-                  <td><?= esc($item['Objetivo']) ?></td>
-                  <td><?= esc($item['Descripcion']) ?></td>
-                  <td><?= esc($item['Cant_min']) ?></td>
-                  <td><?= esc($item['Total']) ?></td>
-                  <td><?= esc($item['Meta']) ?></td>
-                  <td><?= esc($item['Acciones']) ?></td>
+                  <td><?= esc($item['OBJ. PARTICULAR']) ?></td>
+                  <td><?= esc($item['DESCRIPCION']) ?></td>
+                  <td><?= esc($item['CANT. MINIMA']) ?></td>
+                  <td><?= esc($item['TOTAL OBTENIDO']) ?></td>
+                  <td><?= esc($item['META']) ?></td>
+                  <td><?= esc($item['RESULTADO']) ?></td>
+                  <td><?= esc($item['INDICADOR']) ?></td>
+                  <td><?= esc($item['COMENTARIOS']) ?></td>
+                  <td><?= esc($item['Acciones y/o Estrategias para lograr semáforo verde']) ?></td>
+
+        
                   <td>
                     <button type="button" class="btn btn-primary btn-editar-indicador" data-toggle="modal"
                             data-target="#indicadorModal" data-id="<?= $item['id'] ?>" title="Editar Indicador">
