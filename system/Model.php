@@ -221,7 +221,7 @@ class Model extends BaseModel
 
         return $builder->limit($limit, $offset)
             ->get()
-            ->getResult($this->tempReturnType);
+            ->getResultArray();
     }
 
     /**

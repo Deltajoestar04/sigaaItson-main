@@ -56,7 +56,7 @@ class Indicador extends Controller
 
         $data = [
             'usuario' => $usuario,
-            'Indicador' => $indicadores,
+            'indicadores' => $indicadores,
             'id_usuario' => $id_usuario,
             'id_rol' => $id_rol,
             'id' => $id,
@@ -66,8 +66,9 @@ class Indicador extends Controller
             'menu_rol' => $session->get('menu_rol'),
             'menu_rol_usuario' => $session->get('menu_rol_usuario'),
         ];
-
-        return view('Indicador/index', $data);
+  //      echo"<pre>"; print_r($data);echo"</pre>";
+        // Cargar la vista con los datos
+      return view('Indicador/index', $data);
     }
 
     public function guardar()
