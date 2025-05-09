@@ -17,32 +17,34 @@ class IndicadorModel extends Model
 
     protected $allowedFields = [
         'id_usuario',
-        'OBJ. PARTICULAR',
-        'DESCRIPCION',
-        'CANT. MINIMA',
-        'TOTAL OBTENIDO',
-        'META',
-        'RESULTADO',
-        'INDICADOR',
-        'COMENTARIOS',
-        'Acciones y/o Estrategias para lograr semáforo verde',
+        'obj_particular',
+        'descripcion',
+        'cant_minima',
+        'total_obtenido',
+        'meta',
+        'resultado',
+        'indicador',
+        'comentarios',
+        'estrategias_semaforo_verde',
     ];
 
     protected $validationRules = [
-        'id_usuario'  => 'required|is_natural_no_zero',
-        'OBJ. PARTICULAR' => 'permit_empty',
-        'DESCRIPCION'     => 'permit_empty',
-        'CANT. MINIMA'    => 'permit_empty|integer',
-        'TOTAL OBTENIDO'  => 'permit_empty|integer',
-        'META'            => 'permit_empty|max_length[100]',
-        'RESULTADO'       => 'permit_empty|max_length[100]',
-        'INDICADOR'       => 'required|min_length[3]',
-        'COMENTARIOS'     => 'permit_empty',
-        'Acciones y/o Estrategias para lograr semáforo verde' => 'permit_empty',
+        'id_usuario'           => 'required|is_natural_no_zero',
+        'obj_particular'       => 'permit_empty',
+        'descripcion'          => 'permit_empty',
+        'cant_minima'          => 'permit_empty|integer',
+        'total_obtenido'       => 'permit_empty|integer',
+        'meta'                 => 'permit_empty|max_length[100]',
+        'resultado'            => 'permit_empty|max_length[100]',
+        'indicador'            => 'required|min_length[3]',
+        'comentarios'          => 'permit_empty',
+        'estrategias_semaforo_verde' => 'permit_empty',
     ];
 
+ 
     public function findIndicadoresPorUsuario($id_usuario)
     {
         return $this->where('id_usuario', $id_usuario)->findAll();
+       // echo "<pre>"; print_r($data); echo "</pre>"; exit;
     }
 }

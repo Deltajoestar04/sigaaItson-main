@@ -35,7 +35,7 @@
             <?php if (!empty($indicadores)): ?>
               <?php foreach ($indicadores as $item): ?>
                 <?php
-                  $resultado = floatval($item['RESULTADO']);
+                  $resultado = floatval($item['resultado']);
                   if ($resultado >= 80) {
                     $claseResultado = 'bg-verde';
                     $textoResultado = '';
@@ -51,17 +51,17 @@
                   }
                 ?>
                 <tr>
-                  <td><?= esc($item['OBJ. PARTICULAR']) ?></td>
-                  <td><?= esc($item['DESCRIPCION']) ?></td>
-                  <td><?= esc($item['CANT. MINIMA']) ?></td>
-                  <td><?= esc($item['TOTAL OBTENIDO']) ?></td>
-                  <td><?= esc($item['META']) ?>%</td>
+                  <td><?= esc($item['obj_particular']) ?></td>
+                  <td><?= esc($item['descripcion']) ?></td>
+                  <td><?= esc($item['cant_minima']) ?></td>
+                  <td><?= esc($item['total_obtenido']) ?></td>
+                  <td><?= esc($item['meta']) ?>%</td>
                   <td class="<?= $claseResultado ?>">
-                    <?= esc($item['RESULTADO']) ?> <br>
+                    <?= esc($item['resultado']) ?> <br>
                   </td>
-                  <td><?= esc($item['INDICADOR']) ?></td>
-                  <td><?= esc($item['COMENTARIOS']) ?></td>
-                  <td><?= esc($item['Acciones y/o Estrategias para lograr semáforo verde']) ?></td>
+                  <td><?= esc($item['indicador']) ?></td>
+                  <td><?= esc($item['comentarios']) ?></td>
+                  <td><?= esc($item['estrategias_semaforo_verde']) ?></td>
                 </tr>
               <?php endforeach; ?>
             <?php else: ?>
