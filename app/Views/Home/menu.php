@@ -26,6 +26,12 @@
                     <div class="button-icon"><i class="fa fa-chalkboard-teacher fa-2x"></i></div>
                     <div class="button-title">Maestros</div>
                 </a>
+                <div class="col-xs-12 col-sm-4">
+            <a href="<?= base_url(); ?>/Indicador" class="menu-button btn btn-lg btn-block btn-primary text-center">
+                <div class="button-icon"><i class="fa fa-chart-bar fa-2x"></i></div>
+                <div class="button-title">Indicadores</div>
+            </a>
+        </div>
             </div>
             <div class="col-xs-12 col-sm-4">
                 <a href="<?= base_url(); ?>/proximo" class="menu-button btn btn-lg btn-block btn-primary">

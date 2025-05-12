@@ -4,25 +4,24 @@ namespace App\Controllers;
 
 use App\Models\UsuarioModel;
 use App\Models\IndicadorModel;
-use CodeIgniter\Controller;
-
+use App\Models\ProgramaEducativoModel;
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-
-
-class Indicador extends Controller
+class Indicador extends BaseController
 {
     protected $usuarioModel;
     protected $indicadorModel;
+    protected $programaModel;
     protected $request;
 
     public function __construct()
     {
         helper(['form']);
         $this->usuarioModel = new UsuarioModel();
-        $this->indicadorModel = new IndicadorModel(); // Instanciamos correctamente el modelo
+        $this->indicadorModel = new IndicadorModel();
+        $this->programaModel = new ProgramaEducativoModel();
         $this->request = \Config\Services::request();
     }
 
@@ -32,11 +31,29 @@ class Indicador extends Controller
         $id = $session->get('id');
         $id_usuario = $session->get('id_usuario');
         $id_rol = $session->get('id_rol');
-
+    
         if (!$id) {
             return redirect()->to(base_url('/login'))->with('error', 'Sesión no válida');
         }
+    
+        $usuario = $this->usuarioModel->find($id);
+        if (!$usuario) {
+            return redirect()->to(base_url('/login'))->with('error', 'Usuario no encontrado');
+        }
+    
+        $prog_edu_id = $this->request->getVar('prog_edu_id');
+    
+        $indicadores = $this->indicadorModel->obtenerIndicadoresConPrograma($id_usuario);
+    
+        if ($prog_edu_id) {
+            $indicadores = $this->indicadorModel->obtenerPorPrograma($prog_edu_id);
+        }
+    
+        $indicadores_usuario = $this->indicadorModel->findIndicadoresPorUsuario($id) ?? [];
+        $programas = $this->programaModel->obtenerTodos();
 
+        
+    
         // Definir menú activo
         $session->set([
             'menu' => true,
@@ -45,18 +62,10 @@ class Indicador extends Controller
             'menu_rol' => false,
             'menu_rol_usuario' => false,
         ]);
-
-        $usuario = $this->usuarioModel->find($id);
-        if (!$usuario) {
-            return redirect()->to(base_url('/login'))->with('error', 'Usuario no encontrado');
-        }
-
-        // Obtener indicadores del usuario
-        $indicadores = $this->indicadorModel->findIndicadoresPorUsuario($id) ?? [];
-
+    
         $data = [
             'usuario' => $usuario,
-            'indicadores' => $indicadores,
+            'indicadores' => $indicadores_usuario,
             'id_usuario' => $id_usuario,
             'id_rol' => $id_rol,
             'id' => $id,
@@ -65,12 +74,13 @@ class Indicador extends Controller
             'menu_usuario' => $session->get('menu_usuario'),
             'menu_rol' => $session->get('menu_rol'),
             'menu_rol_usuario' => $session->get('menu_rol_usuario'),
+            'programas' => $programas,
         ];
-  //      echo"<pre>"; print_r($data);echo"</pre>";
-        // Cargar la vista con los datos
-      return view('Indicador/index', $data);
-    }
+          //echo"<pre>"; print_r($data);echo"</pre>";
 
+
+        return view('Indicador/index', $data);
+    }
     public function guardar()
     {
         $session = session();

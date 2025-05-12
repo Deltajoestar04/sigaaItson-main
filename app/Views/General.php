@@ -103,6 +103,11 @@ $currentUrl = current_url();
                                 </a>
                             </li>
                             <li>
+                                <a href="<?= base_url(); ?>/Indicador"
+                                    class="<?= ($currentUrl == base_url() . '/Indicador') ? 'active' : '' ?>">
+                                    <i class="fa-solid fa-square-check"></i> Indicadores
+                                </a>
+                            <li>
                                 <a href="<?= base_url(); ?>/proximo"
                                     class="<?= ($currentUrl == base_url() . '/proximo') ? 'active' : '' ?>">
                                     <i class="fa-solid fa-hand-holding-dollar"></i> Becas
@@ -272,6 +277,7 @@ $currentUrl = current_url();
 
     <!-- jQuery -->
     <!-- <script src="<?= base_url(); ?>/dist/js/jquery.min.js"></script> -->
+     
 
     <!-- Bootstrap Core JavaScript -->
     <script src="<?= base_url(); ?>/dist/js/bootstrap.min.js"></script>

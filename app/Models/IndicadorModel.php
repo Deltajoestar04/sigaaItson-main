@@ -6,7 +6,7 @@ use CodeIgniter\Model;
 
 class IndicadorModel extends Model
 {
-    protected $table = 'Indicador_tb';
+    protected $table = 'indicador_tb'; 
     protected $DBGroup = 'default';
     protected $returnType = 'array';
     protected $useSoftDeletes = false;
@@ -26,6 +26,7 @@ class IndicadorModel extends Model
         'indicador',
         'comentarios',
         'estrategias_semaforo_verde',
+        'prog_edu_id',
     ];
 
     protected $validationRules = [
@@ -39,12 +40,43 @@ class IndicadorModel extends Model
         'indicador'            => 'required|min_length[3]',
         'comentarios'          => 'permit_empty',
         'estrategias_semaforo_verde' => 'permit_empty',
+        'prog_edu_id' => 'permit_empty|is_natural_no_zero',
     ];
 
- 
     public function findIndicadoresPorUsuario($id_usuario)
     {
         return $this->where('id_usuario', $id_usuario)->findAll();
-       // echo "<pre>"; print_r($data); echo "</pre>"; exit;
     }
+
+    public function obtenerIndicadoresConPrograma($id_usuario)
+    {
+        return $this->select('indicador_tb.*, programa_educativo.nombre AS nombre_programa_educativo')
+                    ->join('programa_educativo', 'programa_educativo.id = indicador_tb.prog_edu_id', 'left')
+                    ->where('indicador_tb.id_usuario', $id_usuario)
+                    ->findAll();
+    }
+    public function obtenerPorPrograma($prog_edu_id)
+    {
+        return $this->where('prog_edu_id', $prog_edu_id)->findAll();
+    }
+    
+    
+    public function obtenerIndicadoresPorPrograma()
+{
+    $progEduId = $this->request->getGet('prog_edu_id');
+    $indicadorModel = new IndicadorModel();
+
+    // Verificar si prog_edu_id está presente y obtener los indicadores filtrados
+    if ($progEduId) {
+        $indicadores = $indicadorModel->where('prog_edu_id', $progEduId)->findAll();
+    } else {
+        // Si no hay filtro, mostrar todos los indicadores
+        $indicadores = $indicadorModel->findAll();
+    }
+
+    // Devolver la respuesta en formato JSON
+    return $this->response->setJSON($indicadores);
+}
+
+
 }
