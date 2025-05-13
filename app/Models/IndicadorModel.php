@@ -55,28 +55,31 @@ class IndicadorModel extends Model
                     ->where('indicador_tb.id_usuario', $id_usuario)
                     ->findAll();
     }
-    public function obtenerPorPrograma($prog_edu_id)
+    public function obtenerPorPrograma($prog_edu_id, $id_usuario)
     {
-        return $this->where('prog_edu_id', $prog_edu_id)->findAll();
+        return $this->where('prog_edu_id', $prog_edu_id)
+                    ->where('id_usuario', $id_usuario)
+                    ->findAll();
     }
     
     
-    public function obtenerIndicadoresPorPrograma()
+    /*public function obtenerIndicadoresPorPrograma()
 {
     $progEduId = $this->request->getGet('prog_edu_id');
     $indicadorModel = new IndicadorModel();
 
     // Verificar si prog_edu_id está presente y obtener los indicadores filtrados
-    if ($progEduId) {
-        $indicadores = $indicadorModel->where('prog_edu_id', $progEduId)->findAll();
-    } else {
-        // Si no hay filtro, mostrar todos los indicadores
-        $indicadores = $indicadorModel->findAll();
+    if (empty ($progEduId)) {
+        return $this->response->setJSON([]);
     }
 
-    // Devolver la respuesta en formato JSON
+    $indicadores = $this->indicadorModel
+        ->where('prog_edu_id', $prog_edu_id)
+        ->where('id_usuario', $id_usuario)
+        ->findAll();
+
     return $this->response->setJSON($indicadores);
-}
+}*/
 
 
 }
