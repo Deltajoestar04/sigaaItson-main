@@ -154,6 +154,9 @@ class Indicador extends BaseController
             'errors' => $this->indicadorModel->errors()
         ]);
     }
+    session()->setFlashdata('success', 'Indicador guardado correctamente.');
+    return redirect()->to(base_url('Indicador'));
+
 }
 
 public function checkSession()
@@ -165,58 +168,45 @@ public function checkSession()
     ]);
 }
     
-    /*public function guardarIndicador()
-    {
-        $data = $this->input->post();
+ 
     
-        // Asegúrate de que los datos sean válidos antes de insertarlos
-        if (empty($data['obj_particular']) || empty($data['descripcion']) || empty($data['cant_minima']) || empty($data['total_obtenido'])) {
-            echo json_encode(['status' => 'error', 'message' => 'Todos los campos son obligatorios']);
-            return;
-        }
+public function eliminar($id)
+{
+    $session = session();
     
-        // Insertar en la base de datos
-        $indicadorData = [
-            'obj_particular' => $data['obj_particular'],
-            'descripcion' => $data['descripcion'],
-            'cant_minima' => $data['cant_minima'],
-            'total_obtenido' => $data['total_obtenido'],
-            'meta' => $data['meta'],
-            'resultado' => $data['resultado'],
-            'indicador' => $data['indicador'],
-            'comentarios' => $data['comentarios'],
-            'estrategias_semaforo_verde' => $data['estrategias_semaforo_verde'],
-            'created_at' => date('Y-m-d H:i:s'),
-            'updated_at' => date('Y-m-d H:i:s'),
-        ];
-    
-        // Insertar el nuevo indicador
-        $this->db->insert('indicador_tb', $indicadorData);
-    
-        // Responder con éxito
-        echo json_encode(['status' => 'ok']);
-    }*/
-    
-    
-    
-
-    public function eliminar($id = null)
-    {
-        $session = session();
-        $id_usuario = $session->get('id_usuario');
-        $id_rol = $session->get('id_rol');
-
-
-        if (!$id_usuario) {
-            return redirect()->to(base_url('/login'))->with('error', 'Sesión no válida');
-        }
-
-        if ($id) {
-            $this->indicadorModel->delete($id);
-        }
-
-        return redirect()->to(base_url('/Indicador'))->with('success', 'Indicador eliminado correctamente');
+    if (!$session->has('id')) {
+        return $this->response->setJSON([
+            'status' => 'error',
+            'message' => 'Sesión no válida'
+        ]);
     }
+
+    $indicador = $this->indicadorModel->find($id);
+    $id_usuario = $session->get('id_usuario') ?? $session->get('id');
+    
+    if (!$indicador || $indicador['id_usuario'] != $id_usuario) {
+        return $this->response->setJSON([
+            'status' => 'error',
+            'message' => 'Indicador no encontrado o no tienes permisos'
+        ]);
+    }
+
+    // Eliminar el indicador
+    if ($this->indicadorModel->delete($id)) {
+        return $this->response->setJSON([
+            'status' => 'ok',
+            'message' => 'Indicador eliminado correctamente'
+        ]);
+    } else {
+        return $this->response->setJSON([
+            'status' => 'error',
+            'message' => 'Error al eliminar el indicador'
+        ]);
+    }
+}
+    
+
+   
 
     public function obtenerIndicadoresPorPrograma()
     {

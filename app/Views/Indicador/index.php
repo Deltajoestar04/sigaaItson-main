@@ -1,10 +1,22 @@
 
+
 <?php $this->extend("General"); ?>
 <?php $this->section("contenido"); ?>
 
 <link rel="stylesheet" href="<?= base_url('dist/css/custom/Indicador/general.css') ?>">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
 
 <div class="section-container">
+<?php if (session()->getFlashdata('success')): ?>
+  <div class="alert alert-success alert-dismissible fade show" role="alert">
+    <?= session()->getFlashdata('success') ?>
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+<?php endif; ?>
+
   <div class="header-container d-flex justify-content-between align-items-center">
     <h2 class="header-title"><i class="fas fa-chart-bar"></i> Indicadores</h2>
     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalIndicador">
@@ -30,49 +42,57 @@
       </select>
 
       <div class="table-responsive">
-        <table id="table_indicadores" class="table table-striped table-bordered">
-          <thead>
-            <tr>
-               <th><i class="fas fa-user"></i> Obj. Particular</th>
-              <th><i class="fas fa-align-left"></i> Descripción</th>
-              <th><i class="fas fa-sort-numeric-down"></i> Cant. Mínima</th>
-              <th><i class="fad fa-trophy-alt"></i> Total Obtenido</th>
-              <th><i class="fas fa-flag-checkered"></i> Meta</th>
-              <th><i class="fas fa-chart-line"></i> Resultado</th>
-              <th><i class="fas fa-tag"></i> Indicador</th>
-              <th><i class="fas fa-comment"></i> Comentarios</th>
-              <th><i class="fas fa-tools"></i> Acciones y/o Estrategias</th>
-            </tr>
-          </thead>
-          <tbody id="tbody_indicadores">
-            <?php if (!empty($indicadores)): ?>
-              <?php foreach ($indicadores as $item): ?>
-                <?php
-                  $resultado = floatval($item['resultado']);
-                  $claseResultado = $resultado >= 80 ? 'bg-verde' :
-                                    ($resultado >= 60 ? 'bg-amarillo' :
-                                    ($resultado > 0 ? 'bg-rojo' : 'bg-gris'));
-                ?>
-                <tr data-id="<?= $item['id'] ?>">
-                  <td><?= esc($item['obj_particular']) ?></td>
-                  <td><?= esc($item['descripcion']) ?></td>
-                  <td><?= esc($item['cant_minima']) ?></td>
-                  <td><?= esc($item['total_obtenido']) ?></td>
-                  <td><?= esc($item['meta']) ?>%</td>
-                  <td class="<?= $claseResultado ?>"><?= esc($item['resultado']) ?></td>
-                  <td><?= esc($item['indicador']) ?></td>
-                  <td><?= esc($item['comentarios']) ?></td>
-                  <td><?= esc($item['estrategias_semaforo_verde']) ?></td>
-                </tr>
-              <?php endforeach; ?>
-            <?php else: ?>
-              <tr>
-                <td colspan="9" class="text-center">No hay indicadores registrados.</td>
-              </tr>
-            <?php endif; ?>
-          </tbody>
-        </table>
-      </div>
+  <table id="table_indicadores" class="table table-striped table-bordered">
+    <thead>
+      <tr>
+        <th><i class="fas fa-user"></i> Obj. Particular</th>
+        <th><i class="fas fa-align-left"></i> Descripción</th>
+        <th><i class="fas fa-sort-numeric-down"></i> Cant. Mínima</th>
+        <th><i class="fad fa-trophy-alt"></i> Total Obtenido</th>
+        <th><i class="fas fa-flag-checkered"></i> Meta</th>
+        <th><i class="fas fa-chart-line"></i> Resultado</th>
+        <th><i class="fas fa-tag"></i> Indicador</th>
+        <th><i class="fas fa-comment"></i> Comentarios</th>
+        <th><i class="fas fa-tools"></i> Acciones y/o Estrategias</th>
+        <th><i class="fas fa-trash"></i> Eliminar</th>
+      </tr>
+    </thead>
+    <tbody id="tbody_indicadores">
+      <?php if (!empty($indicadores)): ?>
+        <?php foreach ($indicadores as $item): ?>
+          <?php
+            $resultado = floatval($item['resultado']);
+            $claseResultado = $resultado >= 80 ? 'bg-verde' :
+                              ($resultado >= 60 ? 'bg-amarillo' :
+                              ($resultado > 0 ? 'bg-rojo' : 'bg-gris'));
+          ?>
+          <tr data-id="<?= $item['id'] ?>">
+            <td><?= esc($item['obj_particular']) ?></td>
+            <td><?= esc($item['descripcion']) ?></td>
+            <td><?= esc($item['cant_minima']) ?></td>
+            <td><?= esc($item['total_obtenido']) ?></td>
+            <td><?= esc($item['meta']) ?>%</td>
+            <td class="<?= $claseResultado ?>"><?= esc($item['resultado']) ?></td>
+            <td><?= esc($item['indicador']) ?></td>
+            <td><?= esc($item['comentarios']) ?></td>
+            <td><?= esc($item['estrategias_semaforo_verde']) ?></td>
+            <td>
+            <button onclick="eliminarIndicador(<?= $item['id'] ?>)" 
+                            class="btn btn-danger btn-sm" 
+                            title="Eliminar">
+                        <i class="fas fa-trash"></i>
+                    </button>
+            </td>
+          </tr>
+        <?php endforeach; ?>
+      <?php else: ?>
+        <tr>
+          <td colspan="10" class="text-center">No hay indicadores registrados.</td>
+        </tr>
+      <?php endif; ?>
+    </tbody>
+  </table>
+</div>
     </div>
 
     <div style="flex: 0 0 80px;">
@@ -154,7 +174,6 @@
         </div>
 
         <div class="modal-footer">
-          <button type="button" class="btn btn-danger" data-bs-dismiss="modal"><i class="fas fa-times"></i> Cancelar</button>
           <button type="submit" class="btn btn-primary">Guardar</button>
         </div>
       </div>
@@ -330,6 +349,7 @@ editable.addEventListener('blur', function () {
     });
 });
 
+//eliminar indicador
 
 
 
@@ -372,8 +392,8 @@ document.getElementById("formNuevoIndicador").addEventListener("submit", functio
         $('#modalIndicador').modal('hide');
         document.getElementById("programa").dispatchEvent(new Event("change"));
         
-        // Redirigir a /indicador
-        window.location.href = baseUrl + "/indicador";
+        // Redirigir a /Indicador
+        window.location.href = baseUrl + "/Indicador";
       } else {
         alert("Error al guardar: " + (data.message || JSON.stringify(data.errors)));
       }
@@ -384,9 +404,36 @@ document.getElementById("formNuevoIndicador").addEventListener("submit", functio
     });
 });
 
- 
-    
+
 </script>
+<script>
+  document.getElementById('formNuevoIndicador').addEventListener('submit', function (e) {
+    e.preventDefault(); // Evita que el formulario recargue la página
+
+    const form = e.target;
+    const formData = new FormData(form);
+
+    fetch(form.action, {
+      method: 'POST',
+      body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.status === 'ok') {
+        $('#modalIndicador').modal('hide');
+
+        window.location.href = "<?= base_url('Indicador') ?>";
+      } else {
+        alert('Error al guardar: ' + data.message);
+      }
+    })
+    .catch(err => {
+      console.error('Error:', err);
+      alert('Error al guardar el indicador.');
+    });
+  });
+</script>
+
 
 <script src="<?= base_url('dist/js/custom/Indicador/general.js') ?>"></script>
 <script src="<?= base_url('dist/js/custom/Indicador/indicador.js') ?>"></script>
