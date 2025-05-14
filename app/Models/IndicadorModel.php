@@ -16,17 +16,16 @@ class IndicadorModel extends Model
 
     protected $protectFields = true;
     protected $allowedFields = [
-        'id_usuario',
-        'obj_particular',
-        'descripcion',
-        'cant_minima',
-        'total_obtenido',
-        'meta',
-        'resultado',
-        'indicador',
-        'comentarios',
-        'estrategias_semaforo_verde',
-        'prog_edu_id',
+     'id_usuario',
+    'obj_particular',
+    'descripcion',
+    'prog_edu_id',
+    'cant_minima',
+    'total_obtenido',
+    'meta',
+    'indicador',
+    'comentarios',
+    'estrategias_semaforo_verde'
     ];
 
     protected $validationRules = [

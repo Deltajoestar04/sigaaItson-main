@@ -1,3 +1,4 @@
+
 <?php $this->extend("General"); ?>
 <?php $this->section("contenido"); ?>
 
@@ -92,13 +93,11 @@
  <!-- Agregar -->
  <div class="modal fade" id="modalIndicador" tabindex="-1" aria-labelledby="modalIndicadorLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg">
-    <form id="formNuevoIndicador">
-      <div class="modal-content">
+  <form id="formNuevoIndicador" action="<?= base_url('Indicador/guardar') ?>" method="post">      <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title">Nuevo Indicador</h5>
         </div>
-        
-          <div class="modal-body">
+        <div class="modal-body">
           <div class="mb-3">
             <label for="obj_particular" class="form-label"><i class="fas fa-user"></i> Obj. Particular</label>
             <input type="text" class="form-control" id="obj_particular" name="obj_particular" required>  
@@ -121,7 +120,6 @@
             </option>
         <?php endforeach; ?>
     </select>
-</div>
 
           <div class="row">
             <div class="col-md-4 mb-3">
@@ -163,6 +161,9 @@
     </form>
   </div>
 </div>
+
+
+
 
 
 
@@ -330,123 +331,60 @@ editable.addEventListener('blur', function () {
 });
 
 
+
+
 //guardar el nuevo indicador
 // Mostrar el modal al hacer clic en "Nuevo Indicador"
-document.addEventListener('DOMContentLoaded', function() {
-    // Agregar el evento de doble clic a cada celda editable
-    const editableCells = document.querySelectorAll('.editable'); // Selecciona todas las celdas con la clase 'editable'
-    
-    editableCells.forEach(function(cell) {
-        cell.addEventListener('dblclick', function() {
-            // Convertir la celda en un campo de texto editable
-            const currentText = cell.innerText;
-            const input = document.createElement('input');
-            input.type = 'text';
-            input.value = currentText;
-            cell.innerHTML = '';  // Limpia la celda
-            cell.appendChild(input);
-            input.focus();
+document.getElementById("formNuevoIndicador").addEventListener("submit", function (e) {
+  e.preventDefault();
 
-            // Cuando el campo de texto pierda el foco (blur), guardar el dato
-            input.addEventListener('blur', function() {
-                const newValue = input.value; // Obtener el nuevo valor del campo
-                const cellId = cell.getAttribute('data-id'); // El ID de la fila o el identificador del registro
-                const field = cell.getAttribute('data-field'); // El campo de la columna que se está editando
+  // Primero verificar sesión
+  fetch(baseUrl + '/Indicador/checkSession')
+    .then(response => response.json())
+    .then(sessionData => {
+      if (!sessionData.valid) {
+        alert('La sesión ha expirado. Por favor, inicie sesión nuevamente.');
+        window.location.href = baseUrl + '/login';
+        return;
+      }
 
-                // Llamar a la función para enviar los datos al servidor mediante AJAX
-                guardarDatos(cellId, field, newValue, cell);
-            });
-        });
+      // Si la sesión es válida, proceder con el guardado
+      const form = e.target;
+      const formData = new FormData(form);
+
+      // Calcular resultado
+      const total_obtenido = parseFloat(formData.get("total_obtenido")) || 0;
+      const cant_minima = parseFloat(formData.get("cant_minima")) || 0;
+      const resultado = (cant_minima > 0) ? ((total_obtenido / cant_minima) * 100).toFixed(2) : 0;
+      formData.append("resultado", resultado);
+
+      // Enviar datos al servidor
+      return fetch(baseUrl + "/Indicador/guardar", {
+        method: "POST",
+        body: formData,
+      });
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.status === "ok") {
+        // Limpiar formulario
+        e.target.reset();
+        $('#modalIndicador').modal('hide');
+        document.getElementById("programa").dispatchEvent(new Event("change"));
+        
+        // Redirigir a /indicador
+        window.location.href = baseUrl + "/indicador";
+      } else {
+        alert("Error al guardar: " + (data.message || JSON.stringify(data.errors)));
+      }
+    })
+    .catch(error => {
+      console.error("Error:", error);
+      alert("Error en la conexión");
     });
 });
 
-// Función para enviar la petición AJAX
-function guardarDatos(id, campo, valor, cell) {
-    console.log("Enviando datos:", { id, campo, valor });
-
-    // Enviar los datos al servidor mediante fetch (AJAX)
-    fetch('/indicador/actualizar', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-Requested-With': 'XMLHttpRequest',
-            'X-CSRF-TOKEN': '<?= csrf_hash() ?>'  // Si tienes CSRF habilitado
-        },
-        body: JSON.stringify({
-            id: id,
-            campo: campo,
-            valor: valor
-        })
-    })
-    .then(response => response.json()) // Esperar respuesta en formato JSON
-    .then(data => {
-        if (data.success) {
-            console.log('Datos actualizados correctamente.');
-            // Si la actualización fue exitosa, actualizamos la celda
-            cell.innerHTML = valor;
-        } else {
-            console.log('Error al actualizar:', data.message);
-            // En caso de error, podemos mostrar un mensaje o dejar el valor original
-            cell.innerHTML = data.message || 'Error al actualizar';
-        }
-    })
-    .catch(error => {
-        console.error('Error de conexión:', error);
-        // Si hay error en la petición AJAX, podemos restaurar el valor original o manejar el error
-        cell.innerHTML = 'Error de conexión';
-    });
-}
-
-
-
-/*$('#formIndicador').on('submit', function(e) {
-        e.preventDefault();
-
-        $.ajax({
-            url: '<?= base_url("indicador/guardar") ?>',
-            method: 'POST',
-            data: $(this).serialize(),
-            dataType: 'json',
-            success: function(response) {
-                if (response.status === 'ok') {
-                    alert('Indicador guardado exitosamente');
-                    // Opcional: recargar tabla o limpiar formulario
-                    $('#formIndicador')[0].reset();
-                } else {
-                    alert('Error al guardar: ' + JSON.stringify(response.errors));
-                }
-            },
-            error: function(xhr, status, error) {
-                console.log(xhr.responseText);
-                alert('Error en la petición AJAX');
-            }
-        });
-    });*/
-/*document.getElementById('formNuevoIndicador').addEventListener('submit', function(e) {
-    e.preventDefault();
-
-    const form = new FormData(this);
-
-    fetch('<?= base_url('/indicador/guardar') ?>', {
-        method: 'POST',
-        body: form
-    })
-    .then(res => res.json())
-    .then(data => {
-        if (data.status === 'ok') {
-            alert(data.message);
-            // Opcional: recargar tabla, cerrar modal
-            $('#modalIndicador').modal('hide');
-            this.reset(); // Limpia el formulario
-        } else {
-            alert('Error: ' + data.message);
-        }
-    })
-    .catch(err => {
-        console.error('Error en el guardado:', err);
-    });
-});*/
-
+ 
     
 </script>
 

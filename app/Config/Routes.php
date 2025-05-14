@@ -181,6 +181,7 @@ $routes->post('indicador/actualizar', 'Indicador::actualizar');
 
 //Guardar
 $routes->post('indicador/guardar', 'Indicador::guardar');
+$routes->get('indicador/checkSession', 'Indicador::checkSession');
 //Ruta para ver los indicadores
 $routes->get('/Indicador/(:num)', 'Indicador::verIndicadores/$1');
 //Ruta para ver los indicadores por programa educativo
