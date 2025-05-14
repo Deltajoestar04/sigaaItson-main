@@ -77,57 +77,62 @@ class Indicador extends BaseController
 
         return view('Indicador/index', $data);
     }
-
+   
+    
+   
     public function guardar()
     {
+        $indicadorModel = new IndicadorModel();
         $session = session();
-        $id_usuario = $session->get('id');
+        $id_usuario = $session->get('id_usuario');
 
         if (!$id_usuario) {
-            return redirect()->to(base_url('/login'))->with('error', 'Sesión no válida');
+            return $this->response->setJSON([
+                'status' => 'error',
+                'message' => 'Usuario no autenticado'
+            ]);
         }
-
-        $validation = \Config\Services::validation();
-        $validation->setRules([
-            'Indicador'       => 'required|min_length[3]|max_length[255]',
-            'Comentarios'     => 'required|max_length[500]',
-            'cant_minima'     => 'required|numeric',
-            'total_obtenido'  => 'required|numeric',
-        ]);
-
-        if (!$validation->withRequest($this->request)->run()) {
-            return redirect()->back()->withInput()->with('errors', $validation->getErrors());
-        }
-
-        $cant_minima = (float) $this->request->getPost('cant_minima');
-        $total_obtenido = (float) $this->request->getPost('total_obtenido');
-        $resultado = ($cant_minima > 0) ? round(($total_obtenido / $cant_minima) * 100, 2) : 0;
-
         $data = [
-            'Indicador'       => $this->request->getPost('Indicador'),
-            'Comentarios'     => $this->request->getPost('Comentarios'),
-            'cant_minima'     => $cant_minima,
-            'total_obtenido'  => $total_obtenido,
-            'resultado'       => $resultado,
-            'id_usuario'      => $id_usuario,
-            'prog_edu_id'     => $this->request->getPost('prog_edu_id'),
+            'id_usuario'                => $id_usuario,
+            'obj_particular'             => $this->request->getPost('obj_particular'),
+            'descripcion'               => $this->request->getPost('descripcion'),
+            'prog_edu_id'               => $this->request->getPost('prog_edu_id'),
+            'cant_minima'               => $this->request->getPost('cant_minima'),
+            'total_obtenido'            => $this->request->getPost('total_obtenido'),
+            'meta'                      => $this->request->getPost('meta'),
+            'indicador'                 => $this->request->getPost('indicador'),
+            'comentarios'               => $this->request->getPost('comentarios'),
+            'estrategias_semaforo_verde'=> $this->request->getPost('estrategias_semaforo_verde'),
         ];
 
-        $id_indicador = $this->request->getPost('id_indicador');
+       
+    if ($this->indicadorModel->save($data)) {
+        return $this->response->setJSON([
+            'status' => 'ok',
+            'message' => 'Indicador guardado correctamente'
+        ]);
+    } else {
+        return $this->response->setJSON([
+            'status' => 'error',
+            'message' => 'Error al guardar el indicador',
+            'errors' => $this->indicadorModel->errors()
+        ]);
 
-        if ($id_indicador) {
-            $this->indicadorModel->update($id_indicador, $data);
-        } else {
-            $this->indicadorModel->insert($data);
-        }
-
-        return redirect()->to(base_url('/Indicador'))->with('success', 'Indicador guardado correctamente.');
     }
+    }
+
+    
+    
+
+    
+    
 
     public function eliminar($id = null)
     {
         $session = session();
-        $id_usuario = $session->get('id');
+        $id_usuario = $session->get('id_usuario');
+        $id_rol = $session->get('id_rol');
+
 
         if (!$id_usuario) {
             return redirect()->to(base_url('/login'))->with('error', 'Sesión no válida');
@@ -155,6 +160,35 @@ class Indicador extends BaseController
         return $this->response->setJSON($indicadores);
     }
 
+    public function actualizar()
+{
+    $data = $this->request->getJSON(true);
+
+    if (!$data || !isset($data['id']) || !isset($data['campo']) || !isset($data['valor'])) {
+        return $this->response->setJSON(['success' => false, 'message' => 'Datos incompletos']);
+    }
+
+    $id = $data['id'];
+    $campo = $data['campo'];
+    $valor = $data['valor'];
+
+    // Validar que el campo esté permitido
+    $camposPermitidos = ['meta', 'anio', 'observaciones'];
+    if (!in_array($campo, $camposPermitidos)) {
+        return $this->response->setJSON(['success' => false, 'message' => 'Campo no permitido']);
+    }
+
+    $model = new IndicadorModel();
+    $updated = $model->update($id, [$campo => $valor]);
+
+    if ($updated) {
+        return $this->response->setJSON(['success' => true, 'message' => 'Actualizado']);
+    } else {
+        return $this->response->setJSON(['success' => false, 'message' => 'Error al actualizar']);
+    }
+}
+
+
     public function editarCampo()
     {
         if ($this->request->isAJAX()) {
@@ -162,18 +196,35 @@ class Indicador extends BaseController
             $id = $data['id'] ?? null;
             $campo = $data['campo'] ?? null;
             $valor = $data['valor'] ?? null;
-
-            if ($id && $campo && $valor !== null) {
-                if ($this->indicadorModel->update($id, [$campo => $valor])) {
-                    return $this->response->setJSON(['success' => true]);
-                } else {
-                    return $this->response->setJSON(['success' => false, 'message' => 'Error al actualizar']);
-                }
+    
+            // Lista blanca de campos editables
+            $camposPermitidos = [
+                'descripcion',
+                'cant_minima',
+                'total_obtenido',
+                'meta',
+                'indicador',
+                'comentarios',
+                'estrategias_semaforo_verde',
+                'obj_particular'
+            ];
+    
+            if (!$id || !$campo || $valor === null) {
+                return $this->response->setJSON(['success' => false, 'message' => 'Datos incompletos']);
             }
-
-            return $this->response->setJSON(['success' => false, 'message' => 'Datos incompletos']);
+    
+            if (!in_array($campo, $camposPermitidos)) {
+                return $this->response->setJSON(['success' => false, 'message' => 'Campo no permitido']);
+            }
+    
+            if ($this->indicadorModel->update($id, [$campo => $valor])) {
+                return $this->response->setJSON(['success' => true]);
+            } else {
+                return $this->response->setJSON(['success' => false, 'message' => 'Error al actualizar']);
+            }
         }
-
+    
         throw new \CodeIgniter\Exceptions\PageNotFoundException();
     }
+    
 }

@@ -176,8 +176,22 @@ $routes->get('/cv/experienciadocente/manageClasses/(:num)', 'Cv\ExperienciaDocen
 // Ruta para el índice
 
 $routes->get('/Indicador', 'Indicador::index');
+
+$routes->post('indicador/actualizar', 'Indicador::actualizar');
+
 //Guardar
-$routes->post('/Indicador/guardar', 'Indicador::guardar');
+$routes->post('indicador/guardar', 'Indicador::guardar');
+//Ruta para ver los indicadores
+$routes->get('/Indicador/(:num)', 'Indicador::verIndicadores/$1');
+//Ruta para ver los indicadores por programa educativo
+$routes->get('/Indicador/indicadoresPorPrograma/(:num)', 'Indicador::verIndicadoresPorPrograma/$1');
+//Ruta para ver los indicadores por usuario
+$routes->get('/Indicador/indicadoresPorUsuario/(:num)', 'Indicador::verIndicadoresPorUsuario/$1');
+//Ruta para ver los indicadores por usuario y programa educativo
+$routes->get('/Indicador/indicadoresPorUsuarioYPrograma/(:num)/(:num)', 'Indicador::verIndicadoresPorUsuarioYPrograma/$1/$2');
+//Editar
+$routes->get('/Indicador/editar/(:num)', 'Indicador::editar/$1');
+
 //eliminar
 $routes->get('/Indicador/eliminar/(:num)', 'Indicador::eliminar/$1');
 

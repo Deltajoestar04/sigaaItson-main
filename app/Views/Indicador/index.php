@@ -90,79 +90,80 @@
 
 <!-- Modal -->
  <!-- Agregar -->
-<div class="modal fade" id="modalIndicador" tabindex="-1" role="dialog" aria-labelledby="modalIndicadorLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg" role="document">
-    <div class="modal-content">
-      <form action="<?= base_url('Indicador/guardar') ?>" method="POST" id="formIndicador">
+ <div class="modal fade" id="modalIndicador" tabindex="-1" aria-labelledby="modalIndicadorLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <form id="formNuevoIndicador">
+      <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="modalIndicadorLabel"><i class="fas fa-plus"></i> Nuevo Indicador</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span>&times;</span></button>
+          <h5 class="modal-title">Nuevo Indicador</h5>
         </div>
-        <div class="modal-body">
-          <div class="alert alert-danger" id="errorModal" style="display: none;"></div>
-          <input type="hidden" name="id_indicador" id="id_indicador">
-
-          <div class="form-row">
-            <div class="form-group col-md-6">
-              <label for="obj_particular"><i class="fas fa-user"></i> Objetivo Particular</label>
-              <input type="text" class="form-control" id="obj_particular" name="obj_particular">
-            </div>
-            <div class="form-group col-md-6">
-              <label for="descripcion"><i class="fas fa-align-left"></i> Descripción</label>
-              <input type="text" class="form-control" id="descripcion" name="descripcion">
-            </div>
+        
+          <div class="modal-body">
+          <div class="mb-3">
+            <label for="obj_particular" class="form-label"><i class="fas fa-user"></i> Obj. Particular</label>
+            <input type="text" class="form-control" id="obj_particular" name="obj_particular" required>  
           </div>
 
-          <div class="form-group">
-            <label for="prog_edu_id"><i class="fas fa-graduation-cap"></i> Programa Educativo</label>
-            <select class="form-control" id="prog_edu_id" name="prog_edu_id">
-              <option value="">-- Selecciona un programa --</option>
-              <?php foreach ($programas as $programa): ?>
-                <option value="<?= $programa['id']; ?>"><?= esc($programa['nombre']); ?></option>
-              <?php endforeach; ?>
-            </select>
+          <div class="mb-3">
+            <label for="descripcion"  class="form-label" >Descripción</label>
+            <textarea class="form-control" id="descripcion" name="descripcion" rows="2" required></textarea>
           </div>
 
-          <div class="form-row">
-            <div class="form-group col-md-4">
-              <label for="cant_minima"><i class="fas fa-sort-numeric-down"></i> Cantidad Mínima</label>
-              <input type="number" class="form-control" id="cant_minima" name="cant_minima">
+          <div class="mb-3">
+    <label for="prog_edu_id" class="form-label">
+        <i class="fas fa-graduation-cap"></i> Programa Educativo
+    </label>
+    <select class="form-select" id="prog_edu_id" name="prog_edu_id" required>
+        <option value="">-- Selecciona un programa --</option>
+        <?php foreach ($programas as $programa): ?>
+            <option value="<?= esc($programa['id']); ?>">
+                <?= esc($programa['nombre']); ?>
+            </option>
+        <?php endforeach; ?>
+    </select>
+</div>
+
+          <div class="row">
+            <div class="col-md-4 mb-3">
+              <label for="cant_minima" class="form-label"><i class="fas fa-sort-numeric-down"></i> Cant. Mínima</label>
+              <input type="number" class="form-control" id="cant_minima" name="cant_minima" max="100" min="0">
             </div>
-            <div class="form-group col-md-4">
-              <label for="total_obtenido"><i class="fas fa-sigma"></i> Total Obtenido</label>
-              <input type="number" class="form-control" id="total_obtenido" name="total_obtenido">
+            <div class="col-md-4 mb-3">
+              <label for="total_obtenido" class="form-label"><i class="fas fa-sort-numeric-down"></i> Total Obtenido</label>
+              <input type="number" class="form-control" id="total_obtenido" name="total_obtenido" max="100" min="0">
             </div>
-            <div class="form-group col-md-4">
-              <label for="meta"><i class="fas fa-flag-checkered"></i> Meta (%)</label>
+            <div class="col-md-4 mb-3">
+              <label for="meta" class="form-label"><i class="fas fa-sort-numeric-down"></i> Meta (%)</label>
               <input type="number" class="form-control" id="meta" name="meta" max="100" min="0">
             </div>
           </div>
 
-          <div class="form-group">
-            <label for="indicador"><i class="fas fa-tag"></i> Indicador</label>
+          <div class="mb-3">
+            <label for="indicador" class="form-label"><i class="fas fa-tag"></i> Indicador</label>
             <input type="text" class="form-control" id="indicador" name="indicador">
           </div>
 
-          <div class="form-row">
-            <div class="form-group col-md-6">
-              <label for="comentarios"><i class="fas fa-comment"></i> Comentarios</label>
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label for="comentarios" class="form-label"><i class="fas fa-comment"></i> Comentarios</label>
               <textarea class="form-control" id="comentarios" name="comentarios" rows="2"></textarea>
             </div>
-            <div class="form-group col-md-6">
-              <label for="estrategias_semaforo_verde"><i class="fas fa-tools"></i> Estrategias</label>
+            <div class="col-md-6 mb-3">
+              <label for="estrategias_semaforo_verde" class="form-label"><i class="fas fa-tools"></i> Acciones y/o Estrategias</label>
               <textarea class="form-control" id="estrategias_semaforo_verde" name="estrategias_semaforo_verde" rows="2"></textarea>
             </div>
           </div>
         </div>
 
         <div class="modal-footer">
-          <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fas fa-times"></i> Cancelar</button>
+          <button type="button" class="btn btn-danger" data-bs-dismiss="modal"><i class="fas fa-times"></i> Cancelar</button>
           <button type="submit" class="btn btn-primary">Guardar</button>
         </div>
-      </form>
-    </div>
+      </div>
+    </form>
   </div>
 </div>
+
 
 
 
@@ -253,7 +254,7 @@
           .then(data => {
   if (!data.success) {
     alert("Error al guardar: " + data.message);
-  } else {cargarTablaIndicadores
+  } else {
     // Recargar la tabla con el filtro actual
     const programaSelect = document.getElementById("programa");
     const progEduId = programaSelect.value;
@@ -305,6 +306,148 @@
     .catch(error => console.error("Error al recargar los indicadores:", error));
 }
 
+editable.addEventListener('blur', function () {
+    console.log("Blur activado, enviando datos...");
+    fetch('/indicador/actualizar', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest',
+        },
+        body: JSON.stringify({
+            id: id,
+            campo: campo,
+            valor: valor
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log(data);
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+});
+
+
+//guardar el nuevo indicador
+// Mostrar el modal al hacer clic en "Nuevo Indicador"
+document.addEventListener('DOMContentLoaded', function() {
+    // Agregar el evento de doble clic a cada celda editable
+    const editableCells = document.querySelectorAll('.editable'); // Selecciona todas las celdas con la clase 'editable'
+    
+    editableCells.forEach(function(cell) {
+        cell.addEventListener('dblclick', function() {
+            // Convertir la celda en un campo de texto editable
+            const currentText = cell.innerText;
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.value = currentText;
+            cell.innerHTML = '';  // Limpia la celda
+            cell.appendChild(input);
+            input.focus();
+
+            // Cuando el campo de texto pierda el foco (blur), guardar el dato
+            input.addEventListener('blur', function() {
+                const newValue = input.value; // Obtener el nuevo valor del campo
+                const cellId = cell.getAttribute('data-id'); // El ID de la fila o el identificador del registro
+                const field = cell.getAttribute('data-field'); // El campo de la columna que se está editando
+
+                // Llamar a la función para enviar los datos al servidor mediante AJAX
+                guardarDatos(cellId, field, newValue, cell);
+            });
+        });
+    });
+});
+
+// Función para enviar la petición AJAX
+function guardarDatos(id, campo, valor, cell) {
+    console.log("Enviando datos:", { id, campo, valor });
+
+    // Enviar los datos al servidor mediante fetch (AJAX)
+    fetch('/indicador/actualizar', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest',
+            'X-CSRF-TOKEN': '<?= csrf_hash() ?>'  // Si tienes CSRF habilitado
+        },
+        body: JSON.stringify({
+            id: id,
+            campo: campo,
+            valor: valor
+        })
+    })
+    .then(response => response.json()) // Esperar respuesta en formato JSON
+    .then(data => {
+        if (data.success) {
+            console.log('Datos actualizados correctamente.');
+            // Si la actualización fue exitosa, actualizamos la celda
+            cell.innerHTML = valor;
+        } else {
+            console.log('Error al actualizar:', data.message);
+            // En caso de error, podemos mostrar un mensaje o dejar el valor original
+            cell.innerHTML = data.message || 'Error al actualizar';
+        }
+    })
+    .catch(error => {
+        console.error('Error de conexión:', error);
+        // Si hay error en la petición AJAX, podemos restaurar el valor original o manejar el error
+        cell.innerHTML = 'Error de conexión';
+    });
+}
+
+
+
+/*$('#formIndicador').on('submit', function(e) {
+        e.preventDefault();
+
+        $.ajax({
+            url: '<?= base_url("indicador/guardar") ?>',
+            method: 'POST',
+            data: $(this).serialize(),
+            dataType: 'json',
+            success: function(response) {
+                if (response.status === 'ok') {
+                    alert('Indicador guardado exitosamente');
+                    // Opcional: recargar tabla o limpiar formulario
+                    $('#formIndicador')[0].reset();
+                } else {
+                    alert('Error al guardar: ' + JSON.stringify(response.errors));
+                }
+            },
+            error: function(xhr, status, error) {
+                console.log(xhr.responseText);
+                alert('Error en la petición AJAX');
+            }
+        });
+    });*/
+/*document.getElementById('formNuevoIndicador').addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    const form = new FormData(this);
+
+    fetch('<?= base_url('/indicador/guardar') ?>', {
+        method: 'POST',
+        body: form
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.status === 'ok') {
+            alert(data.message);
+            // Opcional: recargar tabla, cerrar modal
+            $('#modalIndicador').modal('hide');
+            this.reset(); // Limpia el formulario
+        } else {
+            alert('Error: ' + data.message);
+        }
+    })
+    .catch(err => {
+        console.error('Error en el guardado:', err);
+    });
+});*/
+
+    
 </script>
 
 <script src="<?= base_url('dist/js/custom/Indicador/general.js') ?>"></script>
