@@ -1,11 +1,8 @@
-
-
 <?php $this->extend("General"); ?>
 <?php $this->section("contenido"); ?>
 
 <link rel="stylesheet" href="<?= base_url('dist/css/custom/Indicador/general.css') ?>">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-
 
 <div class="section-container">
 <?php if (session()->getFlashdata('success')): ?>
@@ -42,57 +39,58 @@
       </select>
 
       <div class="table-responsive">
-  <table id="table_indicadores" class="table table-striped table-bordered">
-    <thead>
-      <tr>
-        <th><i class="fas fa-user"></i> Obj. Particular</th>
-        <th><i class="fas fa-align-left"></i> Descripción</th>
-        <th><i class="fas fa-sort-numeric-down"></i> Cant. Mínima</th>
-        <th><i class="fad fa-trophy-alt"></i> Total Obtenido</th>
-        <th><i class="fas fa-flag-checkered"></i> Meta</th>
-        <th><i class="fas fa-chart-line"></i> Resultado</th>
-        <th><i class="fas fa-tag"></i> Indicador</th>
-        <th><i class="fas fa-comment"></i> Comentarios</th>
-        <th><i class="fas fa-tools"></i> Acciones y/o Estrategias</th>
-        <th><i class="fas fa-trash"></i> Eliminar</th>
-      </tr>
-    </thead>
-    <tbody id="tbody_indicadores">
-      <?php if (!empty($indicadores)): ?>
-        <?php foreach ($indicadores as $item): ?>
-          <?php
-            $resultado = floatval($item['resultado']);
-            $claseResultado = $resultado >= 80 ? 'bg-verde' :
-                              ($resultado >= 60 ? 'bg-amarillo' :
-                              ($resultado > 0 ? 'bg-rojo' : 'bg-gris'));
-          ?>
-          <tr data-id="<?= $item['id'] ?>">
-            <td><?= esc($item['obj_particular']) ?></td>
-            <td><?= esc($item['descripcion']) ?></td>
-            <td><?= esc($item['cant_minima']) ?></td>
-            <td><?= esc($item['total_obtenido']) ?></td>
-            <td><?= esc($item['meta']) ?>%</td>
-            <td class="<?= $claseResultado ?>"><?= esc($item['resultado']) ?></td>
-            <td><?= esc($item['indicador']) ?></td>
-            <td><?= esc($item['comentarios']) ?></td>
-            <td><?= esc($item['estrategias_semaforo_verde']) ?></td>
-            <td>
-            <button onclick="eliminarIndicador(<?= $item['id'] ?>)" 
+        <table id="table_indicadores" class="table table-striped table-bordered">
+          <thead>
+            <tr>
+              <th><i class="fas fa-user"></i> Obj. Particular</th>
+              <th><i class="fas fa-align-left"></i> Descripción</th>
+              <th><i class="fas fa-sort-numeric-down"></i> Cant. Mínima</th>
+              <th><i class="fad fa-trophy-alt"></i> Total Obtenido</th>
+              <th><i class="fas fa-flag-checkered"></i> Meta</th>
+              <th><i class="fas fa-chart-line"></i> Resultado</th>
+              <th><i class="fas fa-tag"></i> Indicador</th>
+              <th><i class="fas fa-comment"></i> Comentarios</th>
+              <th><i class="fas fa-tools"></i> Acciones y/o Estrategias</th>
+              <th><i class="fas fa-cog"></i> Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="tbody_indicadores">
+            <?php if (!empty($indicadores)): ?>
+              <?php foreach ($indicadores as $item): ?>
+                <?php
+                  $resultado = floatval($item['resultado']);
+                  $formattedResult = $resultado % 1 === 0 ? $resultado : number_format($resultado, 2);
+                  $claseResultado = $resultado >= 80 ? 'bg-verde' :
+                                    ($resultado >= 60 ? 'bg-amarillo' :
+                                    ($resultado > 0 ? 'bg-rojo' : 'bg-gris'));
+                ?>
+                <tr data-id="<?= $item['id'] ?>">
+                  <td><?= esc($item['obj_particular']) ?></td>
+                  <td><?= esc($item['descripcion']) ?></td>
+                  <td><?= esc($item['cant_minima']) ?></td>
+                  <td><?= esc($item['total_obtenido']) ?></td>
+                  <td><?= esc($item['meta']) ?>%</td>
+                  <td class="<?= $claseResultado ?>"><?= $formattedResult ?>%</td>
+                  <td><?= esc($item['indicador']) ?></td>
+                  <td><?= esc($item['comentarios']) ?></td>
+                  <td><?= esc($item['estrategias_semaforo_verde']) ?></td>
+                  <td>
+                    <button onclick="eliminarIndicador(<?= $item['id'] ?>)" 
                             class="btn btn-danger btn-sm" 
                             title="Eliminar">
-                        <i class="fas fa-trash"></i>
+                      <i class="fas fa-trash"></i>
                     </button>
-            </td>
-          </tr>
-        <?php endforeach; ?>
-      <?php else: ?>
-        <tr>
-          <td colspan="10" class="text-center">No hay indicadores registrados.</td>
-        </tr>
-      <?php endif; ?>
-    </tbody>
-  </table>
-</div>
+                  </td>
+                </tr>
+              <?php endforeach; ?>
+            <?php else: ?>
+              <tr>
+                <td colspan="10" class="text-center">No hay indicadores registrados.</td>
+              </tr>
+            <?php endif; ?>
+          </tbody>
+        </table>
+      </div>
     </div>
 
     <div style="flex: 0 0 80px;">
@@ -109,11 +107,12 @@
   </div>
 </div>
 
-<!-- Modal -->
- <!-- Agregar -->
- <div class="modal fade" id="modalIndicador" tabindex="-1" aria-labelledby="modalIndicadorLabel" aria-hidden="true">
+<!-- Modal para nuevo indicador -->
+<div class="modal fade" id="modalIndicador" tabindex="-1" aria-labelledby="modalIndicadorLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg">
-  <form id="formNuevoIndicador" action="<?= base_url('Indicador/guardar') ?>" method="post">      <div class="modal-content">
+    <form id="formNuevoIndicador" action="<?= base_url('Indicador/guardar') ?>" method="post">
+      <input type="hidden" name="<?= csrf_token() ?>" value="<?= csrf_hash() ?>" />
+      <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title">Nuevo Indicador</h5>
         </div>
@@ -124,22 +123,23 @@
           </div>
 
           <div class="mb-3">
-            <label for="descripcion"  class="form-label" >Descripción</label>
+            <label for="descripcion" class="form-label">Descripción</label>
             <textarea class="form-control" id="descripcion" name="descripcion" rows="2" required></textarea>
           </div>
 
           <div class="mb-3">
-    <label for="prog_edu_id" class="form-label">
-        <i class="fas fa-graduation-cap"></i> Programa Educativo
-    </label>
-    <select class="form-select" id="prog_edu_id" name="prog_edu_id" required>
-        <option value="">-- Selecciona un programa --</option>
-        <?php foreach ($programas as $programa): ?>
-            <option value="<?= esc($programa['id']); ?>">
-                <?= esc($programa['nombre']); ?>
-            </option>
-        <?php endforeach; ?>
-    </select>
+            <label for="prog_edu_id" class="form-label">
+              <i class="fas fa-graduation-cap"></i> Programa Educativo
+            </label>
+            <select class="form-select" id="prog_edu_id" name="prog_edu_id" required>
+              <option value="">-- Selecciona un programa --</option>
+              <?php foreach ($programas as $programa): ?>
+                <option value="<?= esc($programa['id']); ?>">
+                  <?= esc($programa['nombre']); ?>
+                </option>
+              <?php endforeach; ?>
+            </select>
+          </div>
 
           <div class="row">
             <div class="col-md-4 mb-3">
@@ -181,19 +181,16 @@
   </div>
 </div>
 
-
-
-
-
-
-
 <script>
   var baseUrl = '<?= base_url() ?>';
 
   // Filtro por programa
   document.getElementById("programa").addEventListener("change", function () {
-    var progEduId = this.value;
+    cargarTablaIndicadores(this.value);
+  });
 
+  // Función para cargar la tabla de indicadores
+  function cargarTablaIndicadores(progEduId) {
     fetch(baseUrl + '/Indicador/obtenerIndicadoresPorPrograma?prog_edu_id=' + progEduId)
       .then(response => response.json())
       .then(data => {
@@ -203,6 +200,7 @@
         if (data.length > 0) {
           data.forEach(function (item) {
             var resultado = parseFloat(item.resultado);
+            var formattedResult = resultado % 1 === 0 ? resultado : resultado.toFixed(2);
             var claseResultado = resultado >= 80 ? 'bg-verde' :
                                  resultado >= 60 ? 'bg-amarillo' :
                                  resultado > 0 ? 'bg-rojo' : 'bg-gris';
@@ -219,28 +217,68 @@
               <td>${item.indicador}</td>
               <td>${item.comentarios}</td>
               <td>${item.estrategias_semaforo_verde}</td>
+              <td>
+                <button onclick="eliminarIndicador(${item.id})" 
+                        class="btn btn-danger btn-sm" 
+                        title="Eliminar">
+                  <i class="fas fa-trash"></i>
+                </button>
+              </td>
             `;
             tbody.appendChild(tr);
           });
         } else {
-          tbody.innerHTML = `<tr><td colspan="9" class="text-center">No hay indicadores registrados.</td></tr>`;
+          tbody.innerHTML = `<tr><td colspan="10" class="text-center">No hay indicadores registrados.</td></tr>`;
         }
       })
       .catch(error => console.error("Error al obtener los indicadores:", error));
-  });
+  }
 
-  // Edición en línea por doble clic (excluyendo campo "Resultado")
+  // Función para eliminar un indicador
+  function eliminarIndicador(id) {
+    if (!confirm('¿Estás seguro de que deseas eliminar este indicador? Esta acción no se puede deshacer.')) {
+      return;
+    }
+
+    fetch(`${baseUrl}/Indicador/eliminar/${id}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Requested-With': 'XMLHttpRequest',
+        'X-CSRF-TOKEN': '<?= csrf_hash() ?>'
+      }
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.status === 'ok') {
+        const programaSelect = document.getElementById("programa");
+        const progEduId = programaSelect.value;
+        cargarTablaIndicadores(progEduId);
+        
+        // Mostrar notificación
+        alert('Indicador eliminado correctamente');
+      } else {
+        alert('Error: ' + data.message);
+      }
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      alert('Error al eliminar el indicador');
+    });
+  }
+
+  // Edición en línea por doble clic
   document.addEventListener("DOMContentLoaded", function () {
     const table = document.getElementById("table_indicadores");
 
     table.addEventListener("dblclick", function (e) {
-      const target = e.target;
+    const target = e.target;
 
-      if (target.tagName === "TD" && !target.classList.contains("editing")) {
+    if (target.tagName === "TD" && !target.classList.contains("editing")) {
         const colIndex = [...target.parentNode.children].indexOf(target);
 
-        // Excluir la columna de "Resultado" (índice 5)
-        if (colIndex === 5) return;
+        // Excluir la columna de "Resultado" (índice 5) y "Acciones" (última columna)
+        if (colIndex === 5 || colIndex === [...target.parentNode.children].length - 1) return;
 
         const originalText = target.textContent.trim();
         const input = document.createElement("input");
@@ -251,191 +289,127 @@
         target.appendChild(input);
         input.focus();
 
-        input.addEventListener("blur", function () {
-          const newText = input.value.trim();
-          target.innerHTML = newText;
-          target.classList.remove("editing");
+        const handleBlur = function() {
+            const newText = input.value.trim();
+            target.innerHTML = newText;
+            target.classList.remove("editing");
 
-          const row = target.closest("tr");
-          const id = row.dataset.id;
+            const row = target.closest("tr");
+            const id = row.dataset.id;
 
-          const fieldNames = ["obj_particular", "descripcion", "cant_minima", "total_obtenido", "meta", "resultado", "indicador", "comentarios", "estrategias_semaforo_verde"];
-          const field = fieldNames[colIndex];
+            const fieldNames = ["obj_particular", "descripcion", "cant_minima", "total_obtenido", 
+                              "meta", "resultado", "indicador", "comentarios", "estrategias_semaforo_verde"];
+            const field = fieldNames[colIndex];
 
-          fetch(`${baseUrl}/Indicador/editarCampo`, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              "X-Requested-With": "XMLHttpRequest"
-            },
-            body: JSON.stringify({ id: id, campo: field, valor: newText })
-          })
-          .then(response => response.json())
-          .then(data => {
-  if (!data.success) {
-    alert("Error al guardar: " + data.message);
-  } else {
-    // Recargar la tabla con el filtro actual
-    const programaSelect = document.getElementById("programa");
-    const progEduId = programaSelect.value;
-    cargarTablaIndicadores(progEduId);
-  }
-})
+            fetch(`${baseUrl}/Indicador/editarCampo`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-Requested-With": "XMLHttpRequest",
+                    'X-CSRF-TOKEN': '<?= csrf_hash() ?>'
+                },
+                body: JSON.stringify({ id: id, campo: field, valor: newText })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Actualizar el resultado si se editó cant_minima o total_obtenido
+                    if (field === 'cant_minima' || field === 'total_obtenido') {
+                        updateResultado(row);
+                    }
+                    // Actualizar clase de color si es el campo resultado
+                    if (colIndex === 5) {
+                        updateColorClass(target, newText);
+                    }
+                } else {
+                    alert("Error al guardar: " + (data.message || "Error desconocido"));
+                    target.innerHTML = originalText; // Revertir si hay error
+                }
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                alert("Error de red");
+                target.innerHTML = originalText; // Revertir si hay error
+            });
+        };
 
-          .catch(error => {
-            console.error("Error:", error);
-            alert("Error de red");
-          });
+        input.addEventListener("blur", handleBlur);
+        
+        // También manejar la tecla Enter
+        input.addEventListener("keyup", function(e) {
+            if (e.key === "Enter") {
+                handleBlur();
+            }
         });
-      }
-    });
-  });
-  function cargarTablaIndicadores(progEduId) {
-  fetch(baseUrl + '/Indicador/obtenerIndicadoresPorPrograma?prog_edu_id=' + progEduId)
-    .then(response => response.json())
-    .then(data => {
-      var tbody = document.querySelector("#tbody_indicadores");
-      tbody.innerHTML = "";
+    }
+});
 
-      if (data.length > 0) {
-        data.forEach(function (item) {
-          var resultado = parseFloat(item.resultado);
-          var claseResultado = resultado >= 80 ? 'bg-verde' :
-                               resultado >= 60 ? 'bg-amarillo' :
-                               resultado > 0 ? 'bg-rojo' : 'bg-gris';
-
-          var tr = document.createElement("tr");
-          tr.setAttribute('data-id', item.id);
-          tr.innerHTML = `
-            <td>${item.obj_particular}</td>
-            <td>${item.descripcion}</td>
-            <td>${item.cant_minima}</td>
-            <td>${item.total_obtenido}</td>
-            <td>${item.meta}%</td>
-            <td class="${claseResultado}">${item.resultado}</td>
-            <td>${item.indicador}</td>
-            <td>${item.comentarios}</td>
-            <td>${item.estrategias_semaforo_verde}</td>
-          `;
-          tbody.appendChild(tr);
-        });
-      } else {
-        tbody.innerHTML = `<tr><td colspan="9" class="text-center">No hay indicadores registrados.</td></tr>`;
-      }
-    })
-    .catch(error => console.error("Error al recargar los indicadores:", error));
+// Función para actualizar el campo resultado
+function updateResultado(row) {
+    const cantMinima = parseFloat(row.cells[2].textContent) || 0;
+    const totalObtenido = parseFloat(row.cells[3].textContent) || 0;
+    const resultado = (cantMinima > 0) ? ((totalObtenido / cantMinima) * 100) : 0;
+    
+    // Formatear el resultado (eliminar .00 si es entero)
+    const formattedResult = resultado % 1 === 0 ? resultado.toString() : resultado.toFixed(2);
+    
+    // Actualizar celda de resultado con el símbolo %
+    const resultadoCell = row.cells[5];
+    resultadoCell.textContent = `${formattedResult}%`;
+    updateColorClass(resultadoCell, resultado);
 }
 
-editable.addEventListener('blur', function () {
-    console.log("Blur activado, enviando datos...");
-    fetch('/indicador/actualizar', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-Requested-With': 'XMLHttpRequest',
-        },
-        body: JSON.stringify({
-            id: id,
-            campo: campo,
-            valor: valor
-        })
-    })
-    .then(response => response.json())
-    .then(data => {
-        console.log(data);
-    })
-    .catch(error => {
-        console.error('Error:', error);
-    });
-});
+// Función para actualizar la clase de color
+function updateColorClass(cell, value) {
+    const resultado = parseFloat(value) || 0;
+    cell.className = resultado >= 80 ? 'bg-verde' :
+                    resultado >= 60 ? 'bg-amarillo' :
+                    resultado > 0 ? 'bg-rojo' : 'bg-gris';
+}
+  });
 
-//eliminar indicador
+  // Guardar nuevo indicador
+  document.getElementById("formNuevoIndicador").addEventListener("submit", function (e) {
+    e.preventDefault();
 
+    fetch(baseUrl + '/Indicador/checkSession')
+      .then(response => response.json())
+      .then(sessionData => {
+        if (!sessionData.valid) {
+          alert('La sesión ha expirado. Por favor, inicie sesión nuevamente.');
+          window.location.href = baseUrl + '/login';
+          return;
+        }
 
+        const form = e.target;
+        const formData = new FormData(form);
 
-//guardar el nuevo indicador
-// Mostrar el modal al hacer clic en "Nuevo Indicador"
-document.getElementById("formNuevoIndicador").addEventListener("submit", function (e) {
-  e.preventDefault();
+        const total_obtenido = parseFloat(formData.get("total_obtenido")) || 0;
+        const cant_minima = parseFloat(formData.get("cant_minima")) || 0;
+        const resultado = (cant_minima > 0) ? ((total_obtenido / cant_minima) * 100).toFixed(2) : 0;
+        formData.append("resultado", resultado);
 
-  // Primero verificar sesión
-  fetch(baseUrl + '/Indicador/checkSession')
-    .then(response => response.json())
-    .then(sessionData => {
-      if (!sessionData.valid) {
-        alert('La sesión ha expirado. Por favor, inicie sesión nuevamente.');
-        window.location.href = baseUrl + '/login';
-        return;
-      }
-
-      // Si la sesión es válida, proceder con el guardado
-      const form = e.target;
-      const formData = new FormData(form);
-
-      // Calcular resultado
-      const total_obtenido = parseFloat(formData.get("total_obtenido")) || 0;
-      const cant_minima = parseFloat(formData.get("cant_minima")) || 0;
-      const resultado = (cant_minima > 0) ? ((total_obtenido / cant_minima) * 100).toFixed(2) : 0;
-      formData.append("resultado", resultado);
-
-      // Enviar datos al servidor
-      return fetch(baseUrl + "/Indicador/guardar", {
-        method: "POST",
-        body: formData,
+        return fetch(baseUrl + "/Indicador/guardar", {
+          method: "POST",
+          body: formData,
+        });
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.status === "ok") {
+          e.target.reset();
+          $('#modalIndicador').modal('hide');
+          document.getElementById("programa").dispatchEvent(new Event("change"));
+          window.location.href = baseUrl + "/Indicador";
+        } else {
+          alert("Error al guardar: " + (data.message || JSON.stringify(data.errors)));
+        }
+      })
+      .catch(error => {
+        console.error("Error:", error);
+        alert("Error en la conexión");
       });
-    })
-    .then(response => response.json())
-    .then(data => {
-      if (data.status === "ok") {
-        // Limpiar formulario
-        e.target.reset();
-        $('#modalIndicador').modal('hide');
-        document.getElementById("programa").dispatchEvent(new Event("change"));
-        
-        // Redirigir a /Indicador
-        window.location.href = baseUrl + "/Indicador";
-      } else {
-        alert("Error al guardar: " + (data.message || JSON.stringify(data.errors)));
-      }
-    })
-    .catch(error => {
-      console.error("Error:", error);
-      alert("Error en la conexión");
-    });
-});
-
-
-</script>
-<script>
-  document.getElementById('formNuevoIndicador').addEventListener('submit', function (e) {
-    e.preventDefault(); // Evita que el formulario recargue la página
-
-    const form = e.target;
-    const formData = new FormData(form);
-
-    fetch(form.action, {
-      method: 'POST',
-      body: formData
-    })
-    .then(response => response.json())
-    .then(data => {
-      if (data.status === 'ok') {
-        $('#modalIndicador').modal('hide');
-
-        window.location.href = "<?= base_url('Indicador') ?>";
-      } else {
-        alert('Error al guardar: ' + data.message);
-      }
-    })
-    .catch(err => {
-      console.error('Error:', err);
-      alert('Error al guardar el indicador.');
-    });
   });
 </script>
-
-
-<script src="<?= base_url('dist/js/custom/Indicador/general.js') ?>"></script>
-<script src="<?= base_url('dist/js/custom/Indicador/indicador.js') ?>"></script>
 
 <?php $this->endSection(); ?>

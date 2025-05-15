@@ -184,6 +184,8 @@ $routes->post('indicador/guardar', 'Indicador::guardar');
 $routes->get('indicador/checkSession', 'Indicador::checkSession');
 //Ruta para ver los indicadores
 $routes->post('indicador/eliminar/(:num)', 'Indicador::eliminar/$1');
+$routes->match(['post', 'delete'], 'indicador/eliminar/(:num)', 'Indicador::eliminar/$1');
+
 
  
 
