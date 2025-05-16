@@ -59,7 +59,7 @@
               <?php foreach ($indicadores as $item): ?>
                 <?php
                   $resultado = floatval($item['resultado']);
-                  $formattedResult = $resultado % 1 === 0 ? $resultado : number_format($resultado, 2);
+                  $formattedResult = number_format($resultado, 2);
                   $claseResultado = $resultado >= 80 ? 'bg-verde' :
                                     ($resultado >= 60 ? 'bg-amarillo' :
                                     ($resultado > 0 ? 'bg-rojo' : 'bg-gris'));
@@ -144,15 +144,15 @@
           <div class="row">
             <div class="col-md-4 mb-3">
               <label for="cant_minima" class="form-label"><i class="fas fa-sort-numeric-down"></i> Cant. Mínima</label>
-              <input type="number" class="form-control" id="cant_minima" name="cant_minima" max="100" min="0">
+              <input type="number" step="0.01" class="form-control" id="cant_minima" name="cant_minima" max="100" min="0">
             </div>
             <div class="col-md-4 mb-3">
               <label for="total_obtenido" class="form-label"><i class="fas fa-sort-numeric-down"></i> Total Obtenido</label>
-              <input type="number" class="form-control" id="total_obtenido" name="total_obtenido" max="100" min="0">
+              <input type="number" step="0.01" class="form-control" id="total_obtenido" name="total_obtenido" max="100" min="0">
             </div>
             <div class="col-md-4 mb-3">
               <label for="meta" class="form-label"><i class="fas fa-sort-numeric-down"></i> Meta (%)</label>
-              <input type="number" class="form-control" id="meta" name="meta" max="100" min="0">
+              <input type="number" step="0.01" class="form-control" id="meta" name="meta" max="100" min="0">
             </div>
           </div>
 
@@ -200,7 +200,7 @@
         if (data.length > 0) {
           data.forEach(function (item) {
             var resultado = parseFloat(item.resultado);
-            var formattedResult = resultado % 1 === 0 ? resultado : resultado.toFixed(2);
+            var formattedResult = resultado.toFixed(2);
             var claseResultado = resultado >= 80 ? 'bg-verde' :
                                  resultado >= 60 ? 'bg-amarillo' :
                                  resultado > 0 ? 'bg-rojo' : 'bg-gris';
@@ -213,7 +213,7 @@
               <td>${item.cant_minima}</td>
               <td>${item.total_obtenido}</td>
               <td>${item.meta}%</td>
-              <td class="${claseResultado}">${item.resultado}</td>
+              <td class="${claseResultado}">${formattedResult}%</td>
               <td>${item.indicador}</td>
               <td>${item.comentarios}</td>
               <td>${item.estrategias_semaforo_verde}</td>
@@ -272,9 +272,9 @@
     const table = document.getElementById("table_indicadores");
 
     table.addEventListener("dblclick", function (e) {
-    const target = e.target;
+      const target = e.target;
 
-    if (target.tagName === "TD" && !target.classList.contains("editing")) {
+      if (target.tagName === "TD" && !target.classList.contains("editing")) {
         const colIndex = [...target.parentNode.children].indexOf(target);
 
         // Excluir la columna de "Resultado" (índice 5) y "Acciones" (última columna)
@@ -341,31 +341,31 @@
                 handleBlur();
             }
         });
+      }
+    });
+
+    // Función para actualizar el campo resultado
+    function updateResultado(row) {
+        const cantMinima = parseFloat(row.cells[2].textContent) || 0;
+        const totalObtenido = parseFloat(row.cells[3].textContent) || 0;
+        const resultado = (cantMinima > 0) ? (totalObtenido / cantMinima) * 100 : 0;
+        
+        // Formatear el resultado con exactamente 2 decimales
+        const formattedResult = resultado.toFixed(2);
+        
+        // Actualizar celda de resultado con el símbolo %
+        const resultadoCell = row.cells[5];
+        resultadoCell.textContent = `${formattedResult}%`;
+        updateColorClass(resultadoCell, resultado);
     }
-});
 
-// Función para actualizar el campo resultado
-function updateResultado(row) {
-    const cantMinima = parseFloat(row.cells[2].textContent) || 0;
-    const totalObtenido = parseFloat(row.cells[3].textContent) || 0;
-    const resultado = (cantMinima > 0) ? ((totalObtenido / cantMinima) * 100) : 0;
-    
-    // Formatear el resultado (eliminar .00 si es entero)
-    const formattedResult = resultado % 1 === 0 ? resultado.toString() : resultado.toFixed(2);
-    
-    // Actualizar celda de resultado con el símbolo %
-    const resultadoCell = row.cells[5];
-    resultadoCell.textContent = `${formattedResult}%`;
-    updateColorClass(resultadoCell, resultado);
-}
-
-// Función para actualizar la clase de color
-function updateColorClass(cell, value) {
-    const resultado = parseFloat(value) || 0;
-    cell.className = resultado >= 80 ? 'bg-verde' :
-                    resultado >= 60 ? 'bg-amarillo' :
-                    resultado > 0 ? 'bg-rojo' : 'bg-gris';
-}
+    // Función para actualizar la clase de color
+    function updateColorClass(cell, value) {
+        const resultado = parseFloat(value) || 0;
+        cell.className = resultado >= 80 ? 'bg-verde' :
+                        resultado >= 60 ? 'bg-amarillo' :
+                        resultado > 0 ? 'bg-rojo' : 'bg-gris';
+    }
   });
 
   // Guardar nuevo indicador

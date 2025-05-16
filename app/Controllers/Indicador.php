@@ -78,76 +78,75 @@ class Indicador extends BaseController
         return view('Indicador/index', $data);
     }
 
-    public function guardar()
-    {
-        $session = session();
-        
-        if (!$session->has('id')) {
-            return $this->response->setJSON([
-                'status' => 'error',
-                'message' => 'Sesión no válida'
-            ]);
-        }
-
-        $id_usuario = $session->get('id_usuario') ?? $session->get('id');
-        
-        if (!$id_usuario) {
-            return $this->response->setJSON([
-                'status' => 'error',
-                'message' => 'Usuario no autenticado'
-            ]);
-        }
-
-        $rules = [
-            'obj_particular' => 'permit_empty',
-            'descripcion' => 'permit_empty',
-            'cant_minima' => 'permit_empty|numeric',
-            'total_obtenido' => 'permit_empty|numeric',
-            'meta' => 'permit_empty|numeric',
-            'prog_edu_id' => 'permit_empty|numeric'
-        ];
-
-        if (!$this->validate($rules)) {
-            return $this->response->setJSON([
-                'status' => 'error',
-                'message' => 'Datos inválidos',
-                'errors' => $this->validator->getErrors()
-            ]);
-        }
-
-        $cant_minima = (float)$this->request->getPost('cant_minima');
-        $total_obtenido = (float)$this->request->getPost('total_obtenido');
-        $resultado = ($cant_minima > 0) ? ($total_obtenido / $cant_minima) * 100 : 0;
-
-        $data = [
-            'id_usuario' => $id_usuario,
-            'obj_particular' => $this->request->getPost('obj_particular'),
-            'descripcion' => $this->request->getPost('descripcion'),
-            'prog_edu_id' => $this->request->getPost('prog_edu_id'),
-            'cant_minima' => $cant_minima,
-            'total_obtenido' => $total_obtenido,
-            'meta' => $this->request->getPost('meta'),
-            'resultado' => $resultado,
-            'indicador' => $this->request->getPost('indicador'),
-            'comentarios' => $this->request->getPost('comentarios'),
-            'estrategias_semaforo_verde' => $this->request->getPost('estrategias_semaforo_verde'),
-        ];
-
-        if ($this->indicadorModel->save($data)) {
-            return $this->response->setJSON([
-                'status' => 'ok',
-                'message' => 'Indicador guardado correctamente',
-                'id' => $this->indicadorModel->getInsertID()
-            ]);
-        } else {
-            return $this->response->setJSON([
-                'status' => 'error',
-                'message' => 'Error al guardar el indicador',
-                'errors' => $this->indicadorModel->errors()
-            ]);
-        }
+   public function guardar()
+{
+    $session = session();
+    
+    if (!$session->has('id')) {
+        return $this->response->setJSON([
+            'status' => 'error',
+            'message' => 'Sesión no válida'
+        ]);
     }
 
+    $id_usuario = $session->get('id_usuario') ?? $session->get('id');
+    
+    if (!$id_usuario) {
+        return $this->response->setJSON([
+            'status' => 'error',
+            'message' => 'Usuario no autenticado'
+        ]);
+    }
+
+    $rules = [
+        'obj_particular' => 'permit_empty',
+        'descripcion' => 'permit_empty',
+        'cant_minima' => 'permit_empty|numeric',
+        'total_obtenido' => 'permit_empty|numeric',
+        'meta' => 'permit_empty|numeric',
+        'prog_edu_id' => 'permit_empty|numeric'
+    ];
+
+    if (!$this->validate($rules)) {
+        return $this->response->setJSON([
+            'status' => 'error',
+            'message' => 'Datos inválidos',
+            'errors' => $this->validator->getErrors()
+        ]);
+    }
+
+    $cant_minima = (float)$this->request->getPost('cant_minima');
+    $total_obtenido = (float)$this->request->getPost('total_obtenido');
+    $resultado = ($cant_minima > 0) ? round(($total_obtenido / $cant_minima) * 100, 2) : 0;
+
+    $data = [
+        'id_usuario' => $id_usuario,
+        'obj_particular' => $this->request->getPost('obj_particular'),
+        'descripcion' => $this->request->getPost('descripcion'),
+        'prog_edu_id' => $this->request->getPost('prog_edu_id'),
+        'cant_minima' => $cant_minima,
+        'total_obtenido' => $total_obtenido,
+        'meta' => $this->request->getPost('meta'),
+        'resultado' => $resultado,
+        'indicador' => $this->request->getPost('indicador'),
+        'comentarios' => $this->request->getPost('comentarios'),
+        'estrategias_semaforo_verde' => $this->request->getPost('estrategias_semaforo_verde'),
+    ];
+
+    if ($this->indicadorModel->save($data)) {
+        return $this->response->setJSON([
+            'status' => 'ok',
+            'message' => 'Indicador guardado correctamente',
+            'id' => $this->indicadorModel->getInsertID()
+        ]);
+    } else {
+        return $this->response->setJSON([
+            'status' => 'error',
+            'message' => 'Error al guardar el indicador',
+            'errors' => $this->indicadorModel->errors()
+        ]);
+    }
+}
     public function eliminar($id)
     {
         $session = session();
@@ -219,6 +218,60 @@ class Indicador extends BaseController
 
     public function editarCampo()
 {
+    if ($this->request->isAJAX()) {
+        $data = $this->request->getJSON(true);
+        $id = $data['id'] ?? null;
+        $campo = $data['campo'] ?? null;
+        $valor = $data['valor'] ?? null;
+
+        $camposPermitidos = [
+            'descripcion',
+            'cant_minima',
+            'total_obtenido',
+            'meta',
+            'indicador',
+            'comentarios',
+            'estrategias_semaforo_verde',
+            'obj_particular'
+        ];
+
+        if (!$id || !$campo || $valor === null) {
+            return $this->response->setJSON(['success' => false, 'message' => 'Datos incompletos']);
+        }
+
+        if (!in_array($campo, $camposPermitidos)) {
+            return $this->response->setJSON(['success' => false, 'message' => 'Campo no permitido']);
+        }
+
+        // Obtener el indicador actual
+        $indicador = $this->indicadorModel->find($id);
+        if (!$indicador) {
+            return $this->response->setJSON(['success' => false, 'message' => 'Indicador no encontrado']);
+        }
+
+        $updateData = [$campo => $valor];
+        
+        // Si se edita cant_minima o total_obtenido, recalcular resultado
+        if ($campo === 'cant_minima' || $campo === 'total_obtenido') {
+            $cant_minima = $campo === 'cant_minima' ? (float)$valor : (float)$indicador['cant_minima'];
+            $total_obtenido = $campo === 'total_obtenido' ? (float)$valor : (float)$indicador['total_obtenido'];
+            $resultado = ($cant_minima > 0) ? round(($total_obtenido / $cant_minima) * 100, 2) : 0;
+            $updateData['resultado'] = $resultado;
+        }
+
+        if ($this->indicadorModel->update($id, $updateData)) {
+            $response = ['success' => true];
+            
+            // Si se calculó un nuevo resultado, devolverlo formateado
+            if (isset($resultado)) {
+                $response['resultado'] = number_format($resultado, 2) . '%';
+            }
+            
+            return $this->response->setJSON($response);
+        } else {
+            return $this->response->setJSON(['success' => false, 'message' => 'Error al actualizar']);
+        }
+    }
     if ($this->request->isAJAX()) {
         $data = $this->request->getJSON(true);
         $id = $data['id'] ?? null;

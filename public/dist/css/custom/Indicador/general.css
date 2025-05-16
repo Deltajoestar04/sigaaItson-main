@@ -311,3 +311,99 @@
 .tabla-contenedor table tr:hover {
     background-color: #f1f1f1;
 }
+.clasificacion-container table {
+  border-collapse: collapse;
+  width: 100%;
+  border: 2px solid #333; /* Borde exterior de la tabla */
+}
+
+.clasificacion-container th,
+.clasificacion-container td {
+  border: 1px solid #999; /* Bordes de las celdas */
+  padding: 8px;
+  text-align: left;
+}
+
+.clasificacion-container th {
+  background-color: #f2f2f2;
+}
+
+
+.table-responsive {
+    width: 100%;
+    overflow-x: auto;
+    margin-bottom: 20px;
+}
+
+.table-responsive table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 800px;
+}
+
+.table-responsive table th {
+    color: var(--primary-color);
+    text-align: left;
+    padding: 12px 8px;
+    background-color: #f8f9fa;
+    border-bottom: 2px solid var(--primary-color);
+    font-weight: 600;
+}
+
+.table-responsive table td {
+    padding: 12px 8px;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.table-responsive table td:nth-child(3),  /* Cant. Mínima */
+.table-responsive table td:nth-child(4),  /* Total Obtenido */
+.table-responsive table td:nth-child(5),  /* Meta */
+.table-responsive table td:nth-child(6) { /* Resultado */
+    text-align: center;
+    vertical-align: middle;
+    display: table-cell;
+}
+
+.table-responsive table th:nth-child(10), /* Acciones */
+.table-responsive table td:nth-child(10) {
+    width: 50px;
+    min-width: 50px;
+    padding: 8px 5px;
+    text-align: center;
+}
+
+/* Ajuste de anchos de columnas */
+.table-responsive table th:nth-child(1),  /* Obj. Particular */
+.table-responsive table td:nth-child(1) {
+    width: 15%;
+}
+
+.table-responsive table th:nth-child(2),  /* Descripción */
+.table-responsive table td:nth-child(2) {
+    width: 25%;
+}
+
+/* Columnas numéricas */
+.table-responsive table th:nth-child(3),  /* Cant. Mínima */
+.table-responsive table td:nth-child(3),
+.table-responsive table th:nth-child(4),  /* Total Obtenido */
+.table-responsive table td:nth-child(4),
+.table-responsive table th:nth-child(5),  /* Meta */
+.table-responsive table td:nth-child(5),
+.table-responsive table th:nth-child(6),  /* Resultado */
+.table-responsive table td:nth-child(6) {
+    width: 8%;
+    min-width: 80px;
+}
+
+.table-responsive table th:nth-child(7),  /* Indicador */
+.table-responsive table td:nth-child(7),
+.table-responsive table th:nth-child(8),  /* Comentarios */
+.table-responsive table td:nth-child(8),
+.table-responsive table th:nth-child(9),  /* Estrategias */
+.table-responsive table td:nth-child(9) {
+      width: 50px;
+    min-width: 50px;
+    padding: 8px 5px;
+    text-align: center;
+}
